@@ -1,0 +1,60 @@
+# [5seed-rep] dynGen fate case study -- TopoBranch + all 6 baselines in ONE sweep.
+#
+# Each method at its BEST config (selected by val_score, a GT-free criterion, from
+# the full hyperparameter sweeps) x 5 seeds (seed_everything 41..45) = 7 x 5 = 35
+# runs. This produces the mean +/- std error bars for Supplementary Table
+# tab:supp-dyngen, whose current single-run numbers were taken from the same
+# best configs.
+#
+# Best configs (baked into the *_best5seed base configs in this folder):
+#   difftree  K=1000, density_k=12, density_weight=0.0150398,
+#             density_num_anchors=384, exaggeration_lat=1.4023242, nu_lat=0.0005022
+#   tsne      p1=5,p2=4  (perplexity=200, early_exaggeration=24)
+#   umap      p1=2,p2=4  (n_neighbors=20, min_dist=0.15)
+#   densne    p1=5,p2=5  (perplexity=200, early_exaggeration=32)
+#   densmap   p1=5,p2=4  (n_neighbors=120, min_dist=0.15)
+#   pacmap    p1=3,p2=3  (n_neighbors=40, MN/FP=(1.0,2.0))
+#   phate     p1=5,p2=5  (knn=80, decay=160)
+#
+# A single seed axis works for every method: DiffTree is seeded directly by
+# seed_everything; each baseline sets random_state: null, so its backend
+# (sklearn/umap/pacmap/phate) falls back to the global NumPy RNG that Lightning's
+# seed_everything seeds. Hyperparameters and run names are baked into each base
+# config, so this sweep varies ONLY the seed (no per-method params, which would
+# break methods that do not accept them, e.g. density_weight on a baseline).
+#
+# NOTE: DiffTree runs on GPU (1000 epochs); baselines run on CPU (1 epoch). The
+# launcher/agent host needs a GPU for the DiffTree config.
+#
+# Launch: this folder also contains the seven base configs, so do NOT point a
+# *.yaml-glob launcher at the whole folder (it would try to launch every base
+# config as a sweep). Instead create the sweep from this file directly, e.g.
+#   wandb sweep configs/dyngen/5seed_rep/sweep_5seed_rep_dyngen.yaml
+# then start agents for the printed sweep id. (Alternatively, move this file into
+# a dedicated sweep/ subfolder and point the launcher there.)
+
+program: main.py
+method: grid
+project: DiffTree_rz
+name: cs_5seedrep_all_methods_dyngen
+
+parameters:
+  config:
+    values:
+      - configs/dyngen/5seed_rep/difftree_dyngen_best5seed.yaml
+      - configs/dyngen/5seed_rep/baseline_phate_dyngen_best5seed.yaml
+      - configs/dyngen/5seed_rep/baseline_tsne_dyngen_best5seed.yaml
+      - configs/dyngen/5seed_rep/baseline_umap_dyngen_best5seed.yaml
+      - configs/dyngen/5seed_rep/baseline_pacmap_dyngen_best5seed.yaml
+      - configs/dyngen/5seed_rep/baseline_densmap_dyngen_best5seed.yaml
+      - configs/dyngen/5seed_rep/baseline_densne_dyngen_best5seed.yaml
+
+  seed_everything:
+    values: [41, 42, 43, 44, 45]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

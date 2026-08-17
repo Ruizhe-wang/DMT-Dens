@@ -1,0 +1,107 @@
+# =============================================================================
+# DiffTree Local-Global Consistency Evaluation (Micro-Training)
+# =============================================================================
+#
+# Purpose: Analyze local-global consistency of DiffTree multi-layer embeddings
+#
+# Methodology:
+#   - Global: DiffTree trained on ALL data → per-layer embeddings
+#   - Local: Fresh DiffTree (same config, random init) trained on SUBSET
+#   - Compare: Which layer best preserves local structure?
+#   - Metrics: Fidelity, Trustworthiness, Distortion, Displacement per layer
+#
+# Run: python main.py fit -c conf/consistency_eval/run_difftree_consistency.yaml
+# =============================================================================
+
+seed_everything: 42
+
+data:
+  class_path: data_model.M1datamodel_mnist_v2.DMTBaseDataModule
+  init_args:
+    pca_dim: 64
+    batch_size: 5000
+    num_workers: 0
+    K: 200
+    n_hop: 1
+    data_path: data
+
+# =============================================================================
+# DiffTree Model Configuration
+# =============================================================================
+model:
+  class_path: model.DiffTreeVQ_v2.DMTEVT_model
+  init_args:
+    num_input_dim: 784
+    T_hidden_size: 512
+    T_num_layers: 3
+    t_output_dim: 40
+    tree_depth: 10
+    num_use_moe: 1
+    lr: 0.005
+    weight_decay: 0.0000000001
+    nu_lat: 0.01
+    nu_emb: -1
+    exaggeration_lat: 2
+    exaggeration_emb: -1
+    loss_type: 'G'
+    all_g_l_weight: 0.95
+    ec_ce_weight: 2
+    exp_b: 0.4
+    exp_min: 1e-6
+    max_epochs: 100
+    step2_epoch: 1000
+    step2_r_epoch: 1000
+    sample_rate_feature: 1.00
+    use_tree_rout: true
+    gen_data_bool: false
+    weightrout: 0.1
+    num_use_mlevel_list: [0.5, 1, 5, 10]
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: difftree_consistency_eval
+      project: CONSISTENCY_EVAL
+      save_dir: wandb
+
+  callbacks:
+    # ==========================================================================
+    # Consistency Analysis Callback
+    # Generates: layer comparison, distortion heatmap, displacement vectors
+    # ==========================================================================
+    - class_path: callbacks.consistency_callback.ConsistencyCallback
+      init_args:
+        # Label key in dataset
+        label_key: 'cell_type'
+
+        # Layer selection for analysis
+        # null = ALL layers, or specify list like [0, 1, 2, 3]
+        layers: [0, 1, 2, 3]
+
+        # Epochs for micro-training local DiffTree model
+        # Higher = more accurate local embedding, but slower
+        micro_training_epochs: 100
+
+        # Baseline local method (used only for non-DiffTree models)
+        local_method: 'umap'
+
+        # Label sets to analyze for consistency
+        # Each set is analyzed separately: global vs local embedding comparison
+        label_sets:
+          - [4, 9]                           # Often confused pair
+          - [1, 7]                           # Similar strokes
+          - [0, 6, 8, 9]                     # Round shapes
+          - [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]   # All digits
+
+    # Standard Visualization Callback
+    - class_path: callbacks.xc_plot_callback.VisualizationCallback
+      init_args:
+        output_dir: 'results_consistency/difftree'
+
+  max_epochs: 200              # Training epochs for global model
+  devices: 1
+  accelerator: gpu
+  enable_checkpointing: true
+  check_val_every_n_epoch: 50
+  num_sanity_val_steps: 0

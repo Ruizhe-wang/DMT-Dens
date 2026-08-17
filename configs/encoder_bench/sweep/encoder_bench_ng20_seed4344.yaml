@@ -1,0 +1,35 @@
+# NG20 seed completion: seeds 43 and 44 at the selected learning rates.
+#
+# Seed 42 is already done in sweep v92rl72v on the restored baseline, and it
+# ranked the encoders mlp > resmlp > latent_transformer > ft_transformer on every
+# core metric. These runs exist to test whether that ordering is a property of
+# the encoders or of one seed. Protocol section 6 treats an effect that vanishes
+# on a different seed as an undetermined result, and the ordering here is what
+# the whole first round rests on, so it is worth eight runs to check.
+#
+# lr is not swept: each config already carries the value selected on NG20
+# (mlp 3e-4, resmlp 1e-3, ft_transformer 5e-3, latent_transformer 5e-3), so only
+# the seed varies. Run only on code at or after 3f03455.
+program: main.py
+method: grid
+project: TopoBranch_encoder_bench_NG20
+name: encoder_bench_ng20_seed4344_fixed_baseline
+
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/ng20_mlp.yaml
+      - configs/encoder_bench/ng20_resmlp.yaml
+      - configs/encoder_bench/ng20_ft_transformer.yaml
+      - configs/encoder_bench/ng20_latent_transformer.yaml
+  seed_everything:
+    values:
+      - 43
+      - 44
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

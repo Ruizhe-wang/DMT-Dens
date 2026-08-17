@@ -1,0 +1,56 @@
+# Bio-evaluation config paired with pancreatic_endocrinogenesis.yaml.
+# Expected TopoBranch embedding after training:
+#   outputs/embeddings/pancreas_topobranch_embeddings.csv
+#
+# Example:
+#   python -m tools.bio_eval.run_bio_eval \
+#     --config configs/case_study/diftree/bio_eval_pancreatic_endocrinogenesis.yaml \
+#     --embedding outputs/embeddings/pancreas_topobranch_embeddings.csv \
+#     --method topobranch \
+#     --layer 0 \
+#     --output outputs/bio_eval/case_study_pancreatic_endocrinogenesis
+
+dataset: pancreas
+adata_path: /usr/storage/ruizhe/zangzelin/data/pancreas/endocrinogenesis_day15.5_preprocessed.h5ad
+label_key: clusters
+fine_label_key: clusters_fine
+pseudotime_key: dpt_pseudotime
+transition_key: clusters_fine
+transition_labels:
+  - Ngn3 low EP
+  - Ngn3 high EP
+  - Pre-Alpha
+  - Pre-Beta
+  - Fev+ Beta
+rare_key: clusters_fine
+rare_labels:
+  - Fev+ Alpha
+  - Fev+ Pyy
+  - Fev+ Epsilon
+  - Fev+ Delta
+  - Delta
+marker_sets:
+  progenitor:
+    - Sox9
+    - Hnf1b
+    - Pdx1
+  transition:
+    - Neurog3
+    - Chga
+    - Chgb
+  beta:
+    - Ins1
+    - Ins2
+    - Nkx6-1
+  alpha:
+    - Gcg
+    - Arx
+  delta_epsilon:
+    - Sst
+    - Ppy
+panels:
+  - celltype
+  - pseudotime
+  - transition
+  - rare
+  - marker

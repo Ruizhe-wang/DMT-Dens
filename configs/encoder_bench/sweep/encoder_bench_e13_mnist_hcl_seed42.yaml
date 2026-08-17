@@ -1,0 +1,34 @@
+# E13: MNIST (D=784) and HCL (D=3038), seed 42.
+# Neither dataset had any prior encoder-benchmark run, so the controls
+# (mlp, resmlp) are built here alongside the treatment (resmlp-bn) and
+# the first high-dimensional attention datapoint (latent-bn).
+# Each run config carries its own project and its own artifact paths.
+program: main.py
+method: grid
+project: TopoBranch_encoder_bench_HCL
+name: encoder_bench_e13_mnist_hcl_seed42
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/sweep_e13/runs/mnist_mlp_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/mnist_mlp_lr0p0003_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/mnist_resmlp_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/mnist_resmlp_lr0p0003_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/mnist_resmlp_bn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/mnist_resmlp_bn_lr0p0003_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/mnist_latent_bn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/mnist_latent_bn_lr0p0003_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/hcl_mlp_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/hcl_mlp_lr0p0003_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/hcl_resmlp_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/hcl_resmlp_lr0p0003_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/hcl_resmlp_bn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/hcl_resmlp_bn_lr0p0003_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/hcl_latent_bn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e13/runs/hcl_latent_bn_lr0p0003_seed42.yaml

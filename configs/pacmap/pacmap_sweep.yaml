@@ -1,0 +1,29 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: pacmap_all_datasets
+
+parameters:
+  config:
+    values:
+      - 'configs/pacmap/act.yaml'
+      - 'configs/pacmap/aqc.yaml'
+      - 'configs/pacmap/emnist.yaml'
+      - 'configs/pacmap/epi.yaml'
+      - 'configs/pacmap/gast10k.yaml'
+      - 'configs/pacmap/hcl.yaml'
+      - 'configs/pacmap/mca.yaml'
+      - 'configs/pacmap/mnist.yaml'
+      - 'configs/pacmap/ng20.yaml'
+      - 'configs/pacmap/tree.yaml'
+      - 'configs/pacmap/bone_marrow.yaml'
+      - 'configs/pacmap/celegan.yaml'
+      - 'configs/pacmap/mouse_hspc_nestorowa.yaml'
+      - 'configs/pacmap/pancreatic_endocrine.yaml'
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

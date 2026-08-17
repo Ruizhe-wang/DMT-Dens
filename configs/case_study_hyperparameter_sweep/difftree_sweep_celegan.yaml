@@ -1,0 +1,76 @@
+# Case-study hyperparameter sweep: proposed DiffTree/TopoBranch method on
+# C. elegans only.
+#
+# Run:
+#   wandb sweep configs/case_study_hyperparameter_sweep/difftree_sweep_celegan.yaml
+#   wandb agent <entity>/DiffTree_rz/<sweep_id>
+#
+# Base config: configs/case_study_hyperparameter_sweep/difftree_celegan.yaml
+# Base training cost: 1000 GPU epochs per run.
+#
+# Evidence used, strongest first:
+#   1. D:/ruizhe/result/sensitivity/*_summary.csv
+#      5-seed summaries over gast10k, hcl, mca, and ng20.
+#   2. D:/ruizhe/result/ablation/ablation_summary_no_aqc_key_metrics_v2.csv
+#      5-seed component ablation over 8 non-AQC datasets.
+#   3. D:/ruizhe/result/case_study/figs/metrics_case_study.csv
+#      Existing celegan case-study row and baseline comparison.
+#   4. D:/ruizhe/result/density_sweep_1.csv, density_sweep_2.csv, and
+#      difftree_tree_structure_sweep.csv as narrower supplemental sweeps.
+#
+# The results are not a celegan hyperparameter search, so this is a focused
+# transfer design rather than a claimed optimum.
+#
+# Active axes:
+#   density_weight:
+#     Main tradeoff knob. In the sensitivity summaries, lambda 0.0001 -> 0.02
+#     raises mean density_correlation 0.321 -> 0.894, local density 0.283 ->
+#     0.888, and msdp_auc 0.328 -> 0.866, but lowers trustworthiness 0.834 ->
+#     0.771, knn preservation 0.141 -> 0.071, and SVC 0.677 -> 0.583. The useful
+#     region is 0.003..0.02. The current celegan case-study config uses 0.001,
+#     which is likely conservative: it gives density_correlation 0.747, below
+#     densMAP's 0.826 on celegan.
+#
+#   density_k:
+#     Use a focused band, not the wide k=5..50 sensitivity grid. k=15 gives the
+#     best mean density_correlation in the sensitivity summary, k=25 gives the
+#     best local_density_correlation, and k=12 is the existing DiffTree default
+#     used by the current celegan and 9-dataset runs. We drop k=40 because it
+#     improves trust/knn slightly but has much weaker density preservation.
+#
+#   density_num_anchors:
+#     Mild but consistent. The sensitivity summary improves from 128/256 toward
+#     1024-1536 anchors, then saturates. In this celegan config batch_size=1000,
+#     and the model clamps anchors to batch size, so 1000 is the effective
+#     full-batch density estimate. We sweep 512 vs 1000 and do not spend runs on
+#     256 because the existing celegan case-study run already uses 256.
+#
+# Active grid size: 4 (density_weight) x 3 (density_k) x 2 (anchors) = 24 runs.
+
+program: main.py
+method: grid
+project: DiffTree_rz
+name: cs_hpsweep_difftree_celegan
+
+parameters:
+  config:
+    value: configs/case_study_hyperparameter_sweep/difftree_celegan.yaml
+
+  seed_everything:
+    value: 42
+
+  model.init_args.density_weight:
+    values: [0.003, 0.006, 0.01, 0.02]
+
+  model.init_args.density_k:
+    values: [12, 15, 25]
+
+  model.init_args.density_num_anchors:
+    values: [512, 1000]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

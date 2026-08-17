@@ -1,0 +1,91 @@
+# 6-axis RANDOM search for dynGen-fate 2D embedding — successor to grid sweep xvudph5s.
+#
+# Why random (not grid): the 48h is a fixed budget spent purely on sweeping, and
+# per-run wall-time is uncertain. A grid that doesn't finish leaves BIASED coverage
+# (wandb walks grid cells in order, so the last axes get undersampled). Random
+# search fills whatever time is available, stays UNBIASED across every axis under
+# partial completion, and lets the continuous knobs take continuous values (cleaner
+# Spearman trends). Just launch the agents and Ctrl-C them at the 48h mark.
+#
+# Ranking is POST-HOC (no live composite needed): the callback logs the three GT
+# metrics separately; rank by the z-scored combined branch_score =
+# z(gt/topology_f1) + z(gt/branch_monotonicity) + z(gt/fate_corr), exactly as
+# analyze_sweep_xvudph5s_branching.py does. Do NOT rank by dist_corr (it rewards
+# the compressed degenerate) or topology_f1 alone (its winner was not balanced).
+# The `metric:` block below only sets the wandb table's default sort.
+#
+# ---- Ranges: anchored on xvudph5s evidence, widened past every boundary it
+#      was pinned against. xvudph5s = K(50..500) x dw(.005..018) x nu_lat(.001..005)
+#      x density_k(8..20), ranked by branch_score: ----
+#   * K  -- STRONGEST lever (Spearman +0.42), CAPPED at 500 (50->-0.38 ... 500->+0.41,
+#           monotone up). Widen up: {500, 750, 1000, 1250}.
+#   * nu_lat -- lower better, capped at 0.001 (0.001 +0.23 > 0.003 > 0.005 -0.20).
+#           log-uniform down to 0.0003, up to 0.003.
+#   * density_weight -- weak / U-shaped, rank-balanced optimum ~0.008. log-uniform
+#           over a band straddling it [0.004, 0.016]; the compressing high end
+#           (>=0.018, buys topology_f1 at the cost of branch_mono/fate_corr) is
+#           deliberately excluded.
+#   * density_k -- 8 wins, monotone (8 +0.19 > 12 > 20 -0.22). probe low+near: {6,8,10,12}.
+#
+# ---- NEW levers (the budget buys exploration; the 4-knob region may have plateaued) ----
+#   * exaggeration_lat -- latent exaggeration (t-SNE-style); THE direct knob for
+#           "arms over-merged vs fragmented". Never swept on dyngen (base 2).
+#           uniform [1.0, 3.0]. Lower -> more continuous/merged; higher -> separated.
+#   * density_num_anchors -- density-term anchor resolution. Density is the #1
+#           trajectory lever yet anchors were NEVER swept (flagged in best5seed). {256,384,512}.
+#
+# Prior best-BALANCED config (dw=0.008 / K=500 / nu_lat=0.001 / density_k=8 /
+# exaggeration_lat=2 / anchors=256) lies inside these ranges, so random sampling
+# explores around the known winner and beyond every boundary.
+#
+# single seed (42), 500 epochs/run. Re-run the winner at 1000 epochs + 5-seed bake
+# (sweep_all_baselines_best_5seed_dyngen) AFTER this 48h search, separately.
+#
+# Launch (per workflow_wandb_sweep): point YAML_DIR in
+# scripts/run_wandb_multidata.sh at configs/dyngen/sweep_refine (only this file
+# lives here) and run it; stop the agents at ~48h.
+
+program: main.py
+method: random
+project: DiffTree_rz
+name: dyngen_refine6ax_random_seed42_500ep
+
+metric:
+  name: gt/topology_f1   # wandb-table default sort only; real ranking is post-hoc branch_score
+  goal: maximize
+
+parameters:
+  config:
+    values:
+      - configs/case_study/diftree/dyngen_fate.yaml
+  seed_everything:
+    values: [42]
+  data.init_args.K:
+    values: [500, 750, 1000, 1250]
+  model.init_args.nu_lat:
+    distribution: log_uniform_values
+    min: 0.0003
+    max: 0.003
+  model.init_args.density_weight:
+    distribution: log_uniform_values
+    min: 0.004
+    max: 0.016
+  model.init_args.density_k:
+    values: [6, 8, 10, 12]
+  model.init_args.exaggeration_lat:
+    distribution: uniform
+    min: 1.0
+    max: 3.0
+  model.init_args.density_num_anchors:
+    values: [256, 384, 512]
+  model.init_args.max_epochs:
+    values: [500]
+  trainer.max_epochs:
+    values: [500]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

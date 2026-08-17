@@ -1,0 +1,26 @@
+# E12: complete the ResMLP normalization 2x2 (Q1), replicate the
+# mechanism on ACT against its existing 3-seed controls (Q2), and give
+# the simplified latent recipe its remaining seeds (Q3).
+# Run configs carry their own project, so ACT runs log to the ACT project.
+program: main.py
+method: grid
+project: TopoBranch_encoder_bench_NG20
+name: encoder_bench_e12_combination_and_act
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/sweep_e12/runs/ng20_resmlp_bn_inputbn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e12/runs/ng20_resmlp_bn_inputbn_lr0p001_seed43.yaml
+      - configs/encoder_bench/sweep_e12/runs/ng20_resmlp_bn_inputbn_lr0p001_seed44.yaml
+      - configs/encoder_bench/sweep_e12/runs/ng20_resmlp_bn_inputbn_lr0p005_seed42.yaml
+      - configs/encoder_bench/sweep_e12/runs/act_resmlp_bn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e12/runs/act_resmlp_bn_lr0p001_seed43.yaml
+      - configs/encoder_bench/sweep_e12/runs/act_resmlp_bn_lr0p001_seed44.yaml
+      - configs/encoder_bench/sweep_e12/runs/ng20_latent_m32_r16_nodrop_inputbn_lr0p001_seed43.yaml
+      - configs/encoder_bench/sweep_e12/runs/ng20_latent_m32_r16_nodrop_inputbn_lr0p001_seed44.yaml

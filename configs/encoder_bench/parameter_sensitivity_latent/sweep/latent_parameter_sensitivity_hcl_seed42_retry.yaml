@@ -1,0 +1,25 @@
+program: main.py
+method: grid
+project: TopoBranch_latent_parameter_sensitivity
+name: latent_parameter_sensitivity_hcl_seed42_retry
+parameters:
+  config:
+    values:
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_k_10_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_k_20_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_k_30_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_k_40_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_lambda_0p0001_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_lambda_0p0005_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_lambda_0p001_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_lambda_0p003_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_lambda_0p006_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_lambda_0p01_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_lambda_0p02_seed42.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/hcl_baseline_a512_k12_l0p0018_seed42.yaml
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- fit
+- ${args}

@@ -1,0 +1,31 @@
+# - 高 lr 收敛快，manifold loss 可能更早稳定 → 需要更短 warmup？
+# - 低 lr 收敛慢，manifold loss 建立慢 → 需要更长 warmup？
+program: main.py
+method: grid
+project: CONSISTENCY_EVAL
+name: lr_warmup_sweep_difftree_v3_mnist
+
+parameters:
+  config:
+    values:
+      - 'configs/label_scaling_v3/diff_s2_1_7.yaml'
+  data.batch_size:
+    values: [6500]
+
+  model.num_use_mlevel_list:
+    value: [0.8, 1, 1.5]
+
+  # 学习率
+  model.lr:
+    values: [0.001, 0.005, 0.01, 0.05]
+
+  # LG warmup 时长
+  model.lg_warmup_epochs:
+    values: [0, 5, 10, 20, 50]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

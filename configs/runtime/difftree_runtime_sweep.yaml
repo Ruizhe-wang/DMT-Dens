@@ -1,0 +1,46 @@
+program: main.py
+method: grid
+project: DiffTree_runtime
+name: runtime_difftree_3seed_sweep
+
+# Sampling remains fixed by data.init_args.seed: 42; DiffTree reps vary seed_everything.
+parameters:
+  config:
+    values:
+      - 'configs/runtime/difftree/difftree_emnist_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n20000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n40000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n60000.yaml'
+      - 'configs/runtime/difftree/difftree_gast_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_gast_n10638.yaml'
+      - 'configs/runtime/difftree/difftree_gast_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_gast_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n20000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n40000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n60000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n20000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n23341.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n20000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n40000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n60000.yaml'
+
+  seed_everything:
+    values: [42, 43, 44]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

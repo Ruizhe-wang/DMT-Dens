@@ -1,0 +1,93 @@
+program: main.py
+method: grid
+project: TopoBranch_latent_parameter_sensitivity
+name: latent_parameter_sensitivity_gast10k_seeds43_46
+parameters:
+  config:
+    values:
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_128_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_256_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_768_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_1024_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_1536_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_5_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_10_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_15_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_20_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_25_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_30_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_40_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p0001_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p0005_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p001_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p003_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p006_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p01_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p02_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_baseline_a512_k12_l0p0018_seed43.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_128_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_256_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_768_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_1024_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_1536_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_5_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_10_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_15_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_20_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_25_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_30_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_40_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p0001_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p0005_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p001_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p003_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p006_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p01_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p02_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_baseline_a512_k12_l0p0018_seed44.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_128_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_256_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_768_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_1024_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_1536_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_5_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_10_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_15_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_20_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_25_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_30_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_40_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p0001_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p0005_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p001_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p003_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p006_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p01_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p02_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_baseline_a512_k12_l0p0018_seed45.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_128_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_256_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_768_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_1024_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_anchors_1536_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_5_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_10_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_15_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_20_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_25_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_30_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_k_40_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p0001_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p0005_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p001_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p003_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p006_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p01_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_lambda_0p02_seed46.yaml
+    - configs/encoder_bench/parameter_sensitivity_latent/runs/gast10k_baseline_a512_k12_l0p0018_seed46.yaml
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- fit
+- ${args}

@@ -1,0 +1,79 @@
+# Run every baseline configuration selected by best observed `val_score`
+# from the 2026-06-30 hp_sweep export. One run per (method, dataset).
+#
+# Coverage: 6 baselines x 9 datasets (act, epi, tree, emnist, gast10k, hcl,
+#   mca, ng20, mnist) minus densne/emnist (no EMNIST den-SNE run; OOT).
+#   53 configurations total.
+#
+# Run:
+#   wandb sweep configs/baseline_with_best_hyperparameter/baseline_with_best_hyperparameter_sweep.yaml
+#   wandb agent <entity>/DiffTree_rz/<sweep_id>
+
+program: main.py
+method: grid
+project: DiffTree_rz
+name: baseline_with_best_hyperparameter
+
+parameters:
+  config:
+    values:
+      - configs/baseline_with_best_hyperparameter/densmap/act.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/emnist.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/epi.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/gast10k.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/hcl.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/mca.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/mnist.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/ng20.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/tree.yaml
+      - configs/baseline_with_best_hyperparameter/densne/act.yaml
+      - configs/baseline_with_best_hyperparameter/densne/epi.yaml
+      - configs/baseline_with_best_hyperparameter/densne/gast10k.yaml
+      - configs/baseline_with_best_hyperparameter/densne/hcl.yaml
+      - configs/baseline_with_best_hyperparameter/densne/mca.yaml
+      - configs/baseline_with_best_hyperparameter/densne/mnist.yaml
+      - configs/baseline_with_best_hyperparameter/densne/ng20.yaml
+      - configs/baseline_with_best_hyperparameter/densne/tree.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/act.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/emnist.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/epi.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/gast10k.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/hcl.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/mca.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/mnist.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/ng20.yaml
+      - configs/baseline_with_best_hyperparameter/pacmap/tree.yaml
+      - configs/baseline_with_best_hyperparameter/phate/act.yaml
+      - configs/baseline_with_best_hyperparameter/phate/emnist.yaml
+      - configs/baseline_with_best_hyperparameter/phate/epi.yaml
+      - configs/baseline_with_best_hyperparameter/phate/gast10k.yaml
+      - configs/baseline_with_best_hyperparameter/phate/hcl.yaml
+      - configs/baseline_with_best_hyperparameter/phate/mca.yaml
+      - configs/baseline_with_best_hyperparameter/phate/mnist.yaml
+      - configs/baseline_with_best_hyperparameter/phate/ng20.yaml
+      - configs/baseline_with_best_hyperparameter/phate/tree.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/act.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/emnist.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/epi.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/gast10k.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/hcl.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/mca.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/mnist.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/ng20.yaml
+      - configs/baseline_with_best_hyperparameter/tsne/tree.yaml
+      - configs/baseline_with_best_hyperparameter/umap/act.yaml
+      - configs/baseline_with_best_hyperparameter/umap/emnist.yaml
+      - configs/baseline_with_best_hyperparameter/umap/epi.yaml
+      - configs/baseline_with_best_hyperparameter/umap/gast10k.yaml
+      - configs/baseline_with_best_hyperparameter/umap/hcl.yaml
+      - configs/baseline_with_best_hyperparameter/umap/mca.yaml
+      - configs/baseline_with_best_hyperparameter/umap/mnist.yaml
+      - configs/baseline_with_best_hyperparameter/umap/ng20.yaml
+      - configs/baseline_with_best_hyperparameter/umap/tree.yaml
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

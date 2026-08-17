@@ -1,0 +1,155 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: experiment1_mechanism_12variant_10dataset_5seed
+
+parameters:
+  config:
+    values:
+    # --- act ---
+      - configs/ablation/experiment1_mechanism/act_full.yaml
+      - configs/ablation/experiment1_mechanism/act_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/act_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/act_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/act_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/act_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/act_base.yaml
+      - configs/ablation/experiment1_mechanism/act_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/act_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/act_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/act_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/act_b5_multi_density.yaml
+    # --- aqc ---
+      - configs/ablation/experiment1_mechanism/aqc_full.yaml
+      - configs/ablation/experiment1_mechanism/aqc_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/aqc_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/aqc_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/aqc_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/aqc_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/aqc_base.yaml
+      - configs/ablation/experiment1_mechanism/aqc_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/aqc_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/aqc_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/aqc_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/aqc_b5_multi_density.yaml
+    # --- emnist ---
+      - configs/ablation/experiment1_mechanism/emnist_full.yaml
+      - configs/ablation/experiment1_mechanism/emnist_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/emnist_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/emnist_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/emnist_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/emnist_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/emnist_base.yaml
+      - configs/ablation/experiment1_mechanism/emnist_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/emnist_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/emnist_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/emnist_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/emnist_b5_multi_density.yaml
+    # --- epi ---
+      - configs/ablation/experiment1_mechanism/epi_full.yaml
+      - configs/ablation/experiment1_mechanism/epi_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/epi_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/epi_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/epi_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/epi_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/epi_base.yaml
+      - configs/ablation/experiment1_mechanism/epi_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/epi_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/epi_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/epi_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/epi_b5_multi_density.yaml
+    # --- gast10k ---
+      - configs/ablation/experiment1_mechanism/gast10k_full.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_base.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/gast10k_b5_multi_density.yaml
+    # --- hcl ---
+      - configs/ablation/experiment1_mechanism/hcl_full.yaml
+      - configs/ablation/experiment1_mechanism/hcl_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/hcl_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/hcl_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/hcl_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/hcl_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/hcl_base.yaml
+      - configs/ablation/experiment1_mechanism/hcl_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/hcl_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/hcl_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/hcl_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/hcl_b5_multi_density.yaml
+    # --- mca ---
+      - configs/ablation/experiment1_mechanism/mca_full.yaml
+      - configs/ablation/experiment1_mechanism/mca_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/mca_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/mca_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/mca_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/mca_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/mca_base.yaml
+      - configs/ablation/experiment1_mechanism/mca_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/mca_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/mca_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/mca_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/mca_b5_multi_density.yaml
+    # --- mnist ---
+      - configs/ablation/experiment1_mechanism/mnist_full.yaml
+      - configs/ablation/experiment1_mechanism/mnist_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/mnist_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/mnist_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/mnist_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/mnist_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/mnist_base.yaml
+      - configs/ablation/experiment1_mechanism/mnist_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/mnist_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/mnist_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/mnist_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/mnist_b5_multi_density.yaml
+    # --- ng20 ---
+      - configs/ablation/experiment1_mechanism/ng20_full.yaml
+      - configs/ablation/experiment1_mechanism/ng20_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/ng20_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/ng20_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/ng20_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/ng20_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/ng20_base.yaml
+      - configs/ablation/experiment1_mechanism/ng20_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/ng20_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/ng20_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/ng20_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/ng20_b5_multi_density.yaml
+    # --- tree ---
+      - configs/ablation/experiment1_mechanism/tree_full.yaml
+      - configs/ablation/experiment1_mechanism/tree_r1_distance.yaml
+      - configs/ablation/experiment1_mechanism/tree_r2_unidirectional.yaml
+      - configs/ablation/experiment1_mechanism/tree_r3_allpair.yaml
+      - configs/ablation/experiment1_mechanism/tree_r4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/tree_r5_no_density.yaml
+      - configs/ablation/experiment1_mechanism/tree_base.yaml
+      - configs/ablation/experiment1_mechanism/tree_b1_rank.yaml
+      - configs/ablation/experiment1_mechanism/tree_b2_bidirectional.yaml
+      - configs/ablation/experiment1_mechanism/tree_b3_hardpair.yaml
+      - configs/ablation/experiment1_mechanism/tree_b4_single_density.yaml
+      - configs/ablation/experiment1_mechanism/tree_b5_multi_density.yaml
+  seed_everything:
+    values: [42, 43, 44, 45, 46]
+  model.init_args.max_epochs:
+    values: [1000]
+  trainer.max_epochs:
+    values: [1000]
+  # num_workers=0 loads data in the main process (no os.fork), which fully
+  # avoids the fork OOM (Errno 12) seen with parallel sweep agents.
+  data.init_args.num_workers:
+    values: [0]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

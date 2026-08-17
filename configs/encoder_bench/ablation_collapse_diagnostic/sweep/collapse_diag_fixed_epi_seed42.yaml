@@ -1,0 +1,20 @@
+# Targeted collapse diagnostic; generated file.
+program: main.py
+method: grid
+project: TopoBranch_latent_collapse_diagnostic
+name: collapse_diag_fixed_epi_seed42
+parameters:
+  config:
+    values:
+    - configs/encoder_bench/ablation_collapse_diagnostic/runs/collapse_diag_fixed_latent-bn_epi_full_seed42.yaml
+    - configs/encoder_bench/ablation_collapse_diagnostic/runs/collapse_diag_fixed_latent-bn_epi_base_seed42.yaml
+    - configs/encoder_bench/ablation_collapse_diagnostic/runs/collapse_diag_fixed_latent-bn_epi_b2_bidirectional_seed42.yaml
+    - configs/encoder_bench/ablation_collapse_diagnostic/runs/collapse_diag_fixed_latent-bn_epi_b3_hardpair_seed42.yaml
+    - configs/encoder_bench/ablation_collapse_diagnostic/runs/collapse_diag_fixed_latent-bn_epi_b4_single_density_seed42.yaml
+    - configs/encoder_bench/ablation_collapse_diagnostic/runs/collapse_diag_fixed_latent-bn_epi_b5_multi_density_seed42.yaml
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- fit
+- ${args}

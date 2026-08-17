@@ -1,0 +1,28 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: dmtme_dataset_sweep
+
+parameters:
+  config:
+    values:
+      - 'configs/dmtme_dataset/ACT.yaml'
+      - 'configs/dmtme_dataset/EMNIST.yaml'
+      - 'configs/dmtme_dataset/HCL.yaml'
+      - 'configs/dmtme_dataset/MCA.yaml'
+      - 'configs/dmtme_dataset/NG20.yaml'
+      - 'configs/dmtme_dataset/aqc.yaml'
+      - 'configs/dmtme_dataset/epi.yaml'
+      - 'configs/dmtme_dataset/gast10k.yaml'
+  seed_everything:
+    values:
+      - 42
+      - 43
+      - 44
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

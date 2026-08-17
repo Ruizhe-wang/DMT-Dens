@@ -1,0 +1,30 @@
+# E06: adaptive pooling initialized exactly at the best known fixed pooling.
+#
+# FT feature-specific flatten coefficients start as a uniform mean and can
+# specialize. Latent token std enters through a zero-initialized residual gate,
+# so both variants begin as their stable mean-pooling controls. All other
+# components remain fixed and every variant receives the same LR grid.
+program: main.py
+method: grid
+project: TopoBranch_encoder_bench_NG20
+name: encoder_bench_ng20_e06_adaptive_pooling_seed42
+
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/sweep_e06/runs/ng20_ft_transformer_wide_flatten_mean_init_lr0p005.yaml
+      - configs/encoder_bench/sweep_e06/runs/ng20_ft_transformer_wide_flatten_mean_init_lr0p001.yaml
+      - configs/encoder_bench/sweep_e06/runs/ng20_ft_transformer_wide_flatten_mean_init_lr0p0003.yaml
+      - configs/encoder_bench/sweep_e06/runs/ng20_latent_transformer_wide_r16_mean_std_residual_lr0p005.yaml
+      - configs/encoder_bench/sweep_e06/runs/ng20_latent_transformer_wide_r16_mean_std_residual_lr0p001.yaml
+      - configs/encoder_bench/sweep_e06/runs/ng20_latent_transformer_wide_r16_mean_std_residual_lr0p0003.yaml
+      - configs/encoder_bench/sweep_e06/runs/ng20_latent_transformer_m32_r16_mean_std_residual_lr0p005.yaml
+      - configs/encoder_bench/sweep_e06/runs/ng20_latent_transformer_m32_r16_mean_std_residual_lr0p001.yaml
+      - configs/encoder_bench/sweep_e06/runs/ng20_latent_transformer_m32_r16_mean_std_residual_lr0p0003.yaml
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

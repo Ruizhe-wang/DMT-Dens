@@ -1,0 +1,72 @@
+# =============================================================================
+# Baseline PHATE Configuration for Local-Global Consistency Evaluation
+# Requires: `pip install phate`
+# Dataset: MNIST
+# Usage: python main.py fit -c configs/consistency_eval/baseline_phate_mnist.yaml
+# =============================================================================
+
+seed_everything: 42
+
+data:
+  class_path: data_model.M1datamodel_mnist_v2.DMTBaseDataModule
+  init_args:
+    pca_dim: 64
+    batch_size: 60000
+    num_workers: 4
+    K: 100
+    n_hop: 1
+    data_path: /root/autodl-fs/
+
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: '_phate'
+    data_name: 'mnist'
+    num_input_dim: 784
+    n_components: 2
+    p1: 2
+    p2: 2
+    p3: 0
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: baseline_phate_mnist_consistency
+      project: CONSISTENCY_EVAL
+      save_dir: wandb
+  callbacks:
+    - class_path: callbacks.consistency_callback.ConsistencyCallback
+      init_args:
+        output_dir: 'consistency_output/phate_mnist'
+        eval_every_n_epochs: 1
+        method: 'model'
+        label_key: 'cell_type'
+        use_wandb: true
+        max_samples: 10000
+        save_local: true
+        down_sample: 10000
+        use_model_embedding: true
+        label_sets:
+          - ['0']
+          - ['1']
+          - ['4']
+          - ['7']
+          - ['3', '8']
+          - ['4', '9']
+          - ['1', '7']
+          - ['5', '6']
+          - ['0', '6', '8', '9']
+          - ['1', '4', '7']
+          - ['0', '1', '2', '3', '4']
+          - ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        schemes:
+          - 'side_by_side'
+          - 'displacement'
+          - 'distortion'
+          - 'multiscale'
+  max_epochs: 1
+  devices: 1
+  accelerator: gpu
+  check_val_every_n_epoch: 1
+  enable_checkpointing: false

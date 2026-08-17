@@ -1,0 +1,37 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: density_component_ablation_four_groups_0018_12_512_5seed
+
+parameters:
+  config:
+    values:
+      - configs/ablation/component/gast10k_no_density.yaml
+      - configs/ablation/component/gast10k_single_scale.yaml
+      - configs/ablation/component/gast10k_multi_scale.yaml
+      - configs/ablation/component/gast10k_full.yaml
+      - configs/ablation/component/hcl_no_density.yaml
+      - configs/ablation/component/hcl_single_scale.yaml
+      - configs/ablation/component/hcl_multi_scale.yaml
+      - configs/ablation/component/hcl_full.yaml
+      - configs/ablation/component/mca_no_density.yaml
+      - configs/ablation/component/mca_single_scale.yaml
+      - configs/ablation/component/mca_multi_scale.yaml
+      - configs/ablation/component/mca_full.yaml
+      - configs/ablation/component/ng20_no_density.yaml
+      - configs/ablation/component/ng20_single_scale.yaml
+      - configs/ablation/component/ng20_multi_scale.yaml
+      - configs/ablation/component/ng20_full.yaml
+  seed_everything:
+    values: [42, 43, 44, 45, 46]
+  model.init_args.max_epochs:
+    values: [1000]
+  trainer.max_epochs:
+    values: [1000]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

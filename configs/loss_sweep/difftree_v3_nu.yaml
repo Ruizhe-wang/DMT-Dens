@@ -1,0 +1,29 @@
+program: main.py
+method: grid
+project: CONSISTENCY_EVAL
+name: nu_exp_sweep_difftree_v3_mnist
+
+parameters:
+  config:
+    values:
+      - 'configs/label_scaling_v3/diff_s2_1_7.yaml'
+  data.batch_size:
+    values: [6500]
+
+  model.num_use_mlevel_list:
+    value: [0.8, 1, 1.5]
+  model.lg_warmup_epochs:
+    value: 20
+
+  model.nu_lat:
+    values: [0.001, 0.005, 0.01, 0.05, 0.1]
+
+  model.exp_b:
+    values: [0.05, 0.1, 0.2, 0.5, 0.8]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

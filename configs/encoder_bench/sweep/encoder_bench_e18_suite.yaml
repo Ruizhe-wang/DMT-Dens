@@ -1,0 +1,106 @@
+# E18: full-suite encoder comparison against the existing 5-seed MLP
+# baseline. Two encoders, one unified learning rate, identical evaluation.
+# Sweep agents override a run config's project, so read results by run name.
+program: main.py
+method: grid
+project: TopoBranch_encoder_suite
+name: encoder_bench_e18_suite
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/sweep_e18/runs/emnist_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/emnist_latent_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/epi_latent_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/hcl_latent_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/tree_latent_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/mca_latent_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/mnist_latent_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/ng20_latent_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/gast10k_latent_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_resmlp_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_resmlp_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_resmlp_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_resmlp_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_resmlp_bn_seed46.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_latent_bn_seed42.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_latent_bn_seed43.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_latent_bn_seed44.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_latent_bn_seed45.yaml
+      - configs/encoder_bench/sweep_e18/runs/act_latent_bn_seed46.yaml

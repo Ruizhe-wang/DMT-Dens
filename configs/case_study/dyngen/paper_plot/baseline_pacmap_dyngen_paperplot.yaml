@@ -1,0 +1,76 @@
+# [paperplot] PaCMAP on dynGen fate at BEST config (p1=4, p2=0 -> n_neighbors=80, (MN,FP)=(0.3,1.0)).
+# Same best setting as configs/case_study/dyngen/baseline_pacmap_dyngen_best5seed.yaml
+# (chosen by gt/topology_f1 + gt/demap), so the figure matches the 5-seed comparison.
+# Paper-figure variant: the generic viridis plot callback is replaced by
+# case_study_callback.VisualizationCallback so panels use the SAME warm time
+# palette + tab20x3 categorical colours as the DiffTree/TopoBranch panels.
+# NOTE: dynGen pseudotime is normalised to [0,1]; time_vmin/vmax set accordingly
+# (tune if the time colorbar looks washed out).
+# (For a prettier panel you can instead try: visual-best was p1=4,p2=1.)
+# Used by sweep/sweep_baselines_paperplot_dyngen.yaml.
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_dyngen_fate.DMTBaseDataModule
+  init_args:
+    data_path: /usr/storage/zelin181data/sclineage/single-cell-lineage1/data/figure3_fate/dyngen
+    h5ad_file: fig3_fate_dyngen_shared_dynGenZL10k_hyperbranch_v2_seed42.h5ad
+    label_key: fig3_true_terminal
+    state_key: fig3_true_state
+    time_key: fig3_true_time
+    branch_key: true_branch
+    top_genes: null
+    pca_dim: 64
+    seed: 42
+    sample_data_size: 10000
+    batch_size: 10000
+    num_workers: 4
+    K: 50
+    n_hop: 1
+    minmax_scale: true
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: _pacmap
+    data_name: dyngen_fate
+    num_input_dim: 3328
+    n_components: 2
+    p1: 4
+    p2: 0
+    p3: 0
+    random_state: null
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  devices: 1
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  enable_checkpointing: false
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: cs_paperplot_pacmap_dyngen
+      project: DiffTree_rz
+      save_dir: wandb
+  callbacks:
+  - class_path: callbacks.case_study_callback.VisualizationCallback
+    init_args:
+      output_dir: outputs/case_study/dyngen/paper_plot/pacmap
+      dataset_name: dynGen fate
+      method_name: PaCMAP
+      every_n_epochs: 1
+      max_plot_samples: 100000
+      save_formats: [png, pdf]
+      dpi: 800
+      point_size: 6.0
+      alpha: 0.9
+      panel_prefix: case_study
+      time_vmin: 0.0
+      time_vmax: 1.0
+      show_colorbar: true
+      save_legend: true
+  - class_path: callbacks.Eval_density.FidelityEvalCallback
+    init_args:
+      every_n_epochs: 1
+      down_sample: 3000
+      knn_k: 12
+      density_k: 15

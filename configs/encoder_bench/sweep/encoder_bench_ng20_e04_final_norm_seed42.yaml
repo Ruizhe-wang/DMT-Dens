@@ -1,0 +1,29 @@
+# E04: preserve absolute token scale by removing only the final token LayerNorm.
+#
+# Transformer blocks remain pre-LN and unchanged. Batch, seed, epochs,
+# optimizer, objective, projection head, augmentation, sampling, losses and
+# callbacks remain fixed. Every variant receives the same learning-rate grid.
+program: main.py
+method: grid
+project: TopoBranch_encoder_bench_NG20
+name: encoder_bench_ng20_e04_final_norm_seed42
+
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/sweep_e04/runs/ng20_ft_transformer_wide_mean_no_final_norm_lr0p005.yaml
+      - configs/encoder_bench/sweep_e04/runs/ng20_ft_transformer_wide_mean_no_final_norm_lr0p001.yaml
+      - configs/encoder_bench/sweep_e04/runs/ng20_ft_transformer_wide_mean_no_final_norm_lr0p0003.yaml
+      - configs/encoder_bench/sweep_e04/runs/ng20_latent_transformer_wide_r16_no_final_norm_lr0p005.yaml
+      - configs/encoder_bench/sweep_e04/runs/ng20_latent_transformer_wide_r16_no_final_norm_lr0p001.yaml
+      - configs/encoder_bench/sweep_e04/runs/ng20_latent_transformer_wide_r16_no_final_norm_lr0p0003.yaml
+      - configs/encoder_bench/sweep_e04/runs/ng20_latent_transformer_m32_r16_no_final_norm_lr0p005.yaml
+      - configs/encoder_bench/sweep_e04/runs/ng20_latent_transformer_m32_r16_no_final_norm_lr0p001.yaml
+      - configs/encoder_bench/sweep_e04/runs/ng20_latent_transformer_m32_r16_no_final_norm_lr0p0003.yaml
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

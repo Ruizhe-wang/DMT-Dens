@@ -1,0 +1,74 @@
+# =============================================================================
+# TRADE-OFF sweep -- BASELINES (den-SNE + densMAP)
+# =============================================================================
+# Purpose: trace each baseline's density-preservation vs label-separability
+# trade-off CURVE by sweeping ITS density-strength knob `dens_lambda` (zeta),
+# with genuine seed repeats. Paired with sweep_topobranch_tradeoff.yaml to plot
+# three Pareto curves (x = SVC acc, y = density correlation); TopoBranch's curve
+# dominating both baselines' curves is the reviewer-proof claim.
+#
+# FAIRNESS (answers "did you sweep the baselines' density knob?"):
+#   - Structural HPs are FIXED at each dataset's already-tuned best (baked into
+#     the reused baseline_with_best_hyperparameter base configs): densMAP
+#     (n_neighbors, min_dist), den-SNE (perplexity, early_exaggeration).
+#   - Only the DENSITY knob `dens_lambda` varies -- symmetric with the TopoBranch
+#     sweep, which fixes its structure and varies only `density_weight` (lambda_d).
+#   - `dens_lambda` grid spans below and above each method's native default
+#     (densMAP default 2.0, den-SNE default 0.1) so the full high-density /
+#     low-SVC end of the curve is visible for matched-SVC comparison.
+#
+# SEEDS (correctness note): baseline stochasticity is driven by the model's
+#   `random_state` (forwarded to umap / native den-SNE), NOT by `seed_everything`
+#   -- the base configs pin random_state=42. We therefore vary `random_state`
+#   for real seed repeats; varying seed_everything alone would give identical
+#   baseline embeddings.
+#
+# Datasets: the four single-cell benchmarks the density claim concerns
+#   (hcl, gast10k, mca, epi). Add tree/mnist/emnist/ng20/act base configs here
+#   to extend (den-SNE is OOT on EMNIST).
+#
+# Run count: 2 methods x 4 datasets = 8 configs x 11 dens_lambda x 5 seeds = 440
+#   runs (each 1 CPU epoch -- baselines are fast).
+# Launch:  wandb sweep configs/trade_off/sweep_baselines_tradeoff.yaml
+#          wandb agent <sweep_id>
+# =============================================================================
+program: main.py
+method: grid
+project: DiffTree_rz
+name: tradeoff_baselines_denslambda_5seed
+
+parameters:
+  config:
+    values:
+      # --- densMAP (density knob = dens_lambda; structure n_neighbors/min_dist fixed at best) ---
+      - configs/baseline_with_best_hyperparameter/densmap/hcl.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/gast10k.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/mca.yaml
+      - configs/baseline_with_best_hyperparameter/densmap/epi.yaml
+      # --- den-SNE (density knob = dens_lambda; structure perplexity/early_exag fixed at best) ---
+      - configs/baseline_with_best_hyperparameter/densne/hcl.yaml
+      - configs/baseline_with_best_hyperparameter/densne/gast10k.yaml
+      - configs/baseline_with_best_hyperparameter/densne/mca.yaml
+      - configs/baseline_with_best_hyperparameter/densne/epi.yaml
+
+  # DENSITY knob -- the trade-off axis. Widened both ends: 0.0 = structure-only
+  # anchor (plain UMAP / t-SNE -> high SVC, low density corr); up to 16.0 pushes
+  # the high-density / low-SVC extreme. Native defaults (den-SNE 0.1, densMAP 2.0)
+  # remain inside the grid.
+  model.init_args.dens_lambda:
+    values: [0.0, 0.02, 0.05, 0.1, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0]
+
+  # Seed repeats -- random_state is the effective baseline seed (see header note)
+  model.init_args.random_state:
+    values: [42, 43, 44, 45, 46]
+
+  # Global seed pinned; irrelevant to umap/den-SNE stochasticity but kept deterministic
+  seed_everything:
+    value: 42
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

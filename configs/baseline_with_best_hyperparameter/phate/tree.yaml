@@ -1,0 +1,53 @@
+# Best observed baseline configuration from W&B hp_sweep (2026-06-30 export).
+# Selection metric: W&B `val_score` column (higher is better).
+# Source run: baseline_phate_tree; best observed val_score=0.276613.
+# Grid indices p1=4, p2=2 decode to: knn=40, decay=40
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_tree.DMTBaseDataModule
+  init_args:
+    data_path: /usr/storage/ruizhe/mldr_rz/data
+    dataset_file: treedata.mat
+    data_name: tree
+    pca_dim: 64
+    batch_size: 80000
+    num_workers: 0
+    K: 200
+    n_hop: 1
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: _phate
+    data_name: tree
+    num_input_dim: 1000
+    n_components: 2
+    p1: 4
+    p2: 2
+    p3: 0
+    random_state: 42
+    knn: 40
+    decay: 40
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  devices: 1
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  enable_checkpointing: false
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: baseline_best_phate_tree
+      project: DiffTree_rz
+      save_dir: wandb
+  callbacks:
+  - class_path: callbacks.xc_plot_callback.VisualizationCallback
+    init_args:
+      output_dir: outputs/plots/baseline_with_best_hyperparameter/phate/tree
+      every_n_epochs: 1
+  - class_path: callbacks.Eval_density.FidelityEvalCallback
+    init_args:
+      every_n_epochs: 1
+      down_sample: 3000
+      knn_k: 12
+      density_k: 15

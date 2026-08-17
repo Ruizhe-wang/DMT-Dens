@@ -1,0 +1,18 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name:  difftree_case_study_sweep
+
+# Sampling remains fixed by data.init_args.seed: 42; DiffTree reps vary seed_everything.
+parameters:
+  config:
+    values:
+  seed_everything:
+    values: [42, 43, 44]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

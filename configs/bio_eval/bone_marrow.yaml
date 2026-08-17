@@ -1,0 +1,32 @@
+dataset: cellrank_bone_marrow
+adata_path: D:/ruizhe/data/cellrank_bone_marrow/bone_marrow.h5ad
+label_key: clusters
+pseudotime_key: palantir_pseudotime
+diffusion_potential_key: palantir_diff_potential
+branch_probs_key: palantir_branch_probs
+branch_names_key: palantir_branch_probs_cell_types
+rare_frequency_threshold: 0.03
+marker_sets:
+  hsc_progenitor:
+    - Kit
+    - Mpl
+    - Gata2
+  erythroid:
+    - Gata1
+    - Hba-a1
+    - Hba-a2
+  myeloid:
+    - Mpo
+    - Elane
+    - Irf8
+  megakaryocyte:
+    - Vwf
+    - Mpl
+panels:
+  - celltype
+  - pseudotime
+  - diffusion_potential
+  - transition
+  - rare
+  - branch_probability
+  - marker

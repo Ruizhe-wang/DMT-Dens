@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use DMT-Dens, please cite the software and accompanying manuscript."
+title: "DMT-Dens: Density-preserving manifold visualization for biological data"
+type: software
+authors:
+  - given-names: Ruizhe
+    family-names: Wang
+  - given-names: Yixuan
+    family-names: Dong
+  - given-names: Bolin
+    family-names: Yang
+  - given-names: Bingo Wing-Kuen
+    family-names: Ling
+  - given-names: Fuji
+    family-names: Yang
+  - given-names: Zelin
+    family-names: Zang
+    email: zangzelin@gmail.com
+repository-code: "https://github.com/Ruizhe-wang/DMT-Dens"
+license: MIT
+keywords:
+  - dimensionality reduction
+  - manifold learning
+  - density preservation
+  - single-cell analysis
+  - biological visualization

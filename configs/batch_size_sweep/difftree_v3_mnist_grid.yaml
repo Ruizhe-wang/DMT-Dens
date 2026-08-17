@@ -1,0 +1,17 @@
+program: main.py
+method: grid
+project: CONSISTENCY_EVAL
+name: batch_size_sweep_difftree_v3_mnist
+parameters:
+  config:
+    values:
+      - 'conf/label_scaling_v3/diff_s2_1_7.yaml'
+  data.batch_size:
+    values: [500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

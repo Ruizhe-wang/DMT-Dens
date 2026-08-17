@@ -1,0 +1,53 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: case_study_all_sweep
+
+parameters:
+  config:
+    values:
+      # ── DiffTree (3 datasets) ──────────────────────────────────────────────
+      - 'configs/case_study/diftree/pancreatic_endocrinogenesis.yaml'
+      - 'configs/case_study/diftree/mouse_hspc_nestorowa2016.yaml'
+      - 'configs/case_study/diftree/human_bone_marrow_palantir.yaml'
+      - 'configs/case_study/diftree/celegan.yaml'
+      # ── Baselines: densmap (3 datasets) ───────────────────────────────────
+      - 'configs/case_study/baseline/densmap/pancreatic_endocrine.yaml'
+      - 'configs/case_study/baseline/densmap/mouse_hspc_nestorowa.yaml'
+      - 'configs/case_study/baseline/densmap/bone_marrow.yaml'
+      - 'configs/case_study/baseline/densmap/celegan.yaml'
+      # ── Baselines: densne (3 datasets) ────────────────────────────────────
+      - 'configs/case_study/baseline/densne/pancreatic_endocrine.yaml'
+      - 'configs/case_study/baseline/densne/mouse_hspc_nestorowa.yaml'
+      - 'configs/case_study/baseline/densne/bone_marrow.yaml'
+      - 'configs/case_study/baseline/densne/celegan.yaml'
+      # ── Baselines: pacmap (3 datasets) ────────────────────────────────────
+      - 'configs/case_study/baseline/pacmap/pancreatic_endocrine.yaml'
+      - 'configs/case_study/baseline/pacmap/mouse_hspc_nestorowa.yaml'
+      - 'configs/case_study/baseline/pacmap/bone_marrow.yaml'
+      - 'configs/case_study/baseline/pacmap/celegan.yaml'
+      # ── Baselines: phate (3 datasets) ─────────────────────────────────────
+      - 'configs/case_study/baseline/phate/pancreatic_endocrine.yaml'
+      - 'configs/case_study/baseline/phate/mouse_hspc_nestorowa.yaml'
+      - 'configs/case_study/baseline/phate/bone_marrow.yaml'
+      - 'configs/case_study/baseline/phate/celegan.yaml'
+      # ── Baselines: tsne (3 datasets) ──────────────────────────────────────
+      - 'configs/case_study/baseline/tsne/pancreatic_endocrine.yaml'
+      - 'configs/case_study/baseline/tsne/mouse_hspc_nestorowa.yaml'
+      - 'configs/case_study/baseline/tsne/bone_marrow.yaml'
+      - 'configs/case_study/baseline/tsne/celegan.yaml'
+      # ── Baselines: umap (3 datasets) ──────────────────────────────────────
+      - 'configs/case_study/baseline/umap/pancreatic_endocrine.yaml'
+      - 'configs/case_study/baseline/umap/mouse_hspc_nestorowa.yaml'
+      - 'configs/case_study/baseline/umap/bone_marrow.yaml'
+      - 'configs/case_study/baseline/umap/celegan.yaml'
+
+  seed_everything:
+    values: [42]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

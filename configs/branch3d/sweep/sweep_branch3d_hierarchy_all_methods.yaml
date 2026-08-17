@@ -1,0 +1,29 @@
+# Branch3D 'hierarchy' sweep: DiffTree + all baselines on the hierarchy lineage dataset.
+# Each run emits a clean no-background 2D embedding under
+# outputs/paper_embeddings/branch3d_hierarchy/<method>/ for the paper.
+# Launch: set YAML_DIR="configs/branch3d/sweep" in scripts/run_wandb_multidata.sh
+#         (or run only this file's methods one by one with: python main.py fit -c <cfg>)
+program: main.py
+method: grid
+project: DiffTree_rz
+name: branch3d_hierarchy_all_methods
+
+parameters:
+  config:
+    values:
+      - configs/branch3d/hierarchy/difftree.yaml
+      - configs/branch3d/hierarchy/tsne.yaml
+      - configs/branch3d/hierarchy/umap.yaml
+      - configs/branch3d/hierarchy/densmap.yaml
+      - configs/branch3d/hierarchy/densne.yaml
+      - configs/branch3d/hierarchy/phate.yaml
+      - configs/branch3d/hierarchy/pacmap.yaml
+  seed_everything:
+    value: 42
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

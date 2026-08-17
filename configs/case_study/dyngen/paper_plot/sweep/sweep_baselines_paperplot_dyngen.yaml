@@ -1,0 +1,38 @@
+# [paperplot] dynGen fate -- render DiffTree + ALL baselines at their BEST config
+# with the warm case_study_callback palette (single seed; figures only, no stats).
+# Each method's hyperparameters + run name are baked into its *_paperplot base
+# config (best setting = same as the *_best5seed comparison configs).
+#
+# NOTE: DiffTree runs on GPU (1000 epochs), baselines on CPU -- the agent host
+# needs a GPU for the DiffTree config.
+#
+# Launch (per workflow_wandb_sweep): set
+#   YAML_DIR="configs/case_study/dyngen/paper_plot/sweep"
+# in scripts/run_wandb_multidata.sh, then run it. (This folder holds ONLY this
+# sweep file; the base configs live one level up in .../paper_plot/.)
+
+program: main.py
+method: grid
+project: DiffTree_rz
+name: cs_paperplot_baselines_dyngen
+
+parameters:
+  config:
+    values:
+      - configs/case_study/dyngen/paper_plot/difftree_dyngen_paperplot.yaml
+      - configs/case_study/dyngen/paper_plot/baseline_phate_dyngen_paperplot.yaml
+      - configs/case_study/dyngen/paper_plot/baseline_tsne_dyngen_paperplot.yaml
+      - configs/case_study/dyngen/paper_plot/baseline_umap_dyngen_paperplot.yaml
+      - configs/case_study/dyngen/paper_plot/baseline_pacmap_dyngen_paperplot.yaml
+      - configs/case_study/dyngen/paper_plot/baseline_densmap_dyngen_paperplot.yaml
+      - configs/case_study/dyngen/paper_plot/baseline_densne_dyngen_paperplot.yaml
+
+  seed_everything:
+    value: 42
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

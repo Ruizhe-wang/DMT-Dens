@@ -1,0 +1,44 @@
+# Bio-evaluation config paired with human_bone_marrow_palantir.yaml.
+# Expected TopoBranch embedding after training:
+#   outputs/embeddings/human_bone_marrow_palantir_topobranch_embeddings.csv
+#
+# Example:
+#   python -m tools.bio_eval.run_bio_eval \
+#     --config configs/case_study/diftree/bio_eval_human_bone_marrow_palantir.yaml \
+#     --embedding outputs/embeddings/human_bone_marrow_palantir_topobranch_embeddings.csv \
+#     --method topobranch \
+#     --layer 0 \
+#     --output outputs/bio_eval/case_study_human_bone_marrow_palantir
+
+dataset: human_bone_marrow_palantir
+adata_path: /usr/storage/ruizhe/zangzelin/data/bone_marrow/bone_marrow.h5ad
+label_key: clusters
+pseudotime_key: palantir_pseudotime
+diffusion_potential_key: palantir_diff_potential
+branch_probs_key: palantir_branch_probs
+branch_names_key: palantir_branch_probs_cell_types
+rare_frequency_threshold: 0.03
+marker_sets:
+  hsc_progenitor:
+    - Kit
+    - Mpl
+    - Gata2
+  erythroid:
+    - Gata1
+    - Hba-a1
+    - Hba-a2
+  myeloid:
+    - Mpo
+    - Elane
+    - Irf8
+  megakaryocyte:
+    - Vwf
+    - Mpl
+panels:
+  - celltype
+  - pseudotime
+  - diffusion_potential
+  - transition
+  - rare
+  - branch_probability
+  - marker

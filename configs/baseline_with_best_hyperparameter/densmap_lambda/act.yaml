@@ -1,0 +1,55 @@
+# Best-hyperparameter config WITH tuned density strength (dens_lambda).
+# base: configs/baseline_with_best_hyperparameter/densmap/act.yaml (tuned p1/p2)
+# dens_lambda=2 selected from the dens_lambda search by the balanced rule
+#   score = 0.5*norm(density_correlation) + 0.5*norm(svc_acc); ties -> higher density.
+# Selected: density_corr=0.849, svc=0.829 (from 6 lambda values).
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_activity.DMTBaseDataModule
+  init_args:
+    pca_dim: 64
+    batch_size: 10299
+    num_workers: 0
+    K: 200
+    n_f_per_cluster: 3
+    n_hop: 1
+    l_token: 10
+    data_path: /usr/storage/ruizhe/zangzelin/data
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: _densmap
+    data_name: act
+    num_input_dim: 561
+    n_components: 2
+    p1: 4
+    p2: 0
+    p3: 0
+    random_state: null
+    n_neighbors: 80
+    min_dist: 0.001
+    dens_lambda: 2.0
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  devices: 1
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  enable_checkpointing: false
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: baseline_best_densmap_lambda_act
+      project: DiffTree_rz
+      save_dir: wandb
+  callbacks:
+  - class_path: callbacks.xc_plot_callback.VisualizationCallback
+    init_args:
+      output_dir: outputs/plots/baseline_with_best_hyperparameter/densmap_lambda/act
+      every_n_epochs: 1
+  - class_path: callbacks.Eval_density.FidelityEvalCallback
+    init_args:
+      every_n_epochs: 1
+      down_sample: 3000
+      knn_k: 12
+      density_k: 15

@@ -1,0 +1,55 @@
+# PHATE baseline on the branch3d 'star' dataset (clean no-bg embedding).
+# Run: python main.py fit -c configs/branch3d/star/phate.yaml
+seed_everything: 42
+
+data:
+  class_path: data_model.M1datamodel_tree.DMTBaseDataModule
+  init_args:
+    data_path: data/synthetic_branch3d
+    dataset_file: branch3d_dense_states_sparse_transition.mat
+    data_name: branch3d_star
+    data_key: M
+    label_key: C
+    pca_dim: 3
+    batch_size: 4096
+    num_workers: 0
+    K: 30
+    n_hop: 1
+
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: _phate
+    data_name: branch3d_star
+    num_input_dim: 3
+    n_components: 2
+    knn: 30
+    decay: 40
+    random_state: 42
+
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  devices: 1
+  enable_checkpointing: false
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: branch3d_star_phate
+      project: DiffTree_rz
+      save_dir: wandb
+  callbacks:
+    - class_path: callbacks.xc_paper_embedding_callback.PaperEmbeddingCallback
+      init_args:
+        output_dir: outputs/paper_embeddings/branch3d_star/phate
+        method_name: phate
+        every_n_epochs: 1
+        density_npz: data/synthetic_branch3d/branch3d_dense_states_sparse_transition.npz
+    - class_path: callbacks.xc_save_consolidated_embeddings.SaveConsolidatedEmbeddingsCallback
+      init_args:
+        dataset_name: branch3d_star
+        output_dir: outputs/embeddings
+        save_format: both
+        embedding_method_name: phate

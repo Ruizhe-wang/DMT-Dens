@@ -1,0 +1,63 @@
+# =============================================================================
+# Baseline t-SNE Configuration for Local-Global Consistency Evaluation
+# Dataset: Tea Quality
+# Usage: python main.py fit -c conf/consistency_eval/baseline_tsne_tea.yaml
+# =============================================================================
+#
+# Tea Quality Label Mapping:
+#   -1: Not qualified (86 samples)
+#    0: Medium       (220 samples)
+#    1: Good         (36 samples)
+#
+# 342 samples, 36504-dim features (8 sensors x 4563 max time steps, zero-padded)
+# =============================================================================
+
+seed_everything: 42
+
+data:
+  class_path: data_model.M1datamodel_tea.DMTBaseDataModule
+  init_args:
+    pca_dim: 50
+    batch_size: 342  # Load all data at once for baseline methods
+    num_workers: 4
+    K: 10
+    n_hop: 1
+    label_key: tea_quality
+    data_path: data  # Relative path to data/ folder containing teadata/
+
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: '_tsne'
+    data_name: 'tea'
+    num_input_dim: 36504  # 8 sensors x 4563 max time steps
+    n_components: 2
+    # t-SNE hyperparameters
+    p1: 2  # perplexity = 30 (default)
+    p2: 2  # early_exaggeration = 12 (default)
+    p3: 0  # Set to 1 for grid search mode
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: baseline_tsne_tea_consistency
+      project: CONSISTENCY_EVAL
+      save_dir: wandb
+  callbacks:
+    - class_path: callbacks.baseline_plot_callback.BaselinePlotCallback
+      init_args:
+        label_key: 'tea_quality'
+        output_dir: 'results/tsne_tea'
+        label_sets:
+          - ['-1']
+          - ['0']
+          - ['1']
+          - ['0', '1']
+          - ['-1', '0']
+          - ['-1', '0', '1']
+  max_epochs: 1
+  devices: 1
+  accelerator: gpu
+  check_val_every_n_epoch: 1
+  enable_checkpointing: false

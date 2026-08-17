@@ -1,0 +1,39 @@
+# Bio-evaluation config paired with mouse_hspc_nestorowa2016.yaml.
+# Expected TopoBranch embedding after training:
+#   outputs/embeddings/mouse_hspc_nestorowa2016_topobranch_embeddings.csv
+#
+# Example:
+#   python -m tools.bio_eval.run_bio_eval \
+#     --config configs/case_study/diftree/bio_eval_mouse_hspc_nestorowa2016.yaml \
+#     --embedding outputs/embeddings/mouse_hspc_nestorowa2016_topobranch_embeddings.csv \
+#     --method topobranch \
+#     --layer 0 \
+#     --output outputs/bio_eval/case_study_mouse_hspc_nestorowa2016
+
+dataset: mouse_hspc_nestorowa2016
+adata_path: D:/ruizhe/data/mouse_hspc_nestorowa2016/mouse_hspc_nestorowa2016.h5ad
+label_key: cell_type_label
+rare_frequency_threshold: 0.03
+var_symbol_keys:
+  - name
+marker_sets:
+  stem_progenitor:
+    - Kit
+    - Ly6a
+    - Mpl
+    - Gata2
+  erythroid:
+    - Gata1
+    - Hba-a1
+    - Hba-a2
+  myeloid:
+    - Mpo
+    - Elane
+    - Irf8
+  megakaryocyte:
+    - Vwf
+    - Mpl
+panels:
+  - celltype
+  - rare
+  - marker

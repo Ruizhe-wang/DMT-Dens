@@ -1,0 +1,86 @@
+# [5seed-baked] densne_denslambda celegan at BEST config (p1=4, dens_lambda=4.0).
+# Used by appendix_sweeps/sweep_all_baselines_best_5seed_celegan.yaml; only random_state is swept.
+# Base config for the densNE baseline DENSITY-STRENGTH sweep on C. elegans.
+#
+# This is the fair analog of the DiffTree density_weight sweep: it varies the
+# density-preservation strength (dens_lambda) so densNE is tuned on the same
+# axis DiffTree is, instead of only on structural params (perplexity).
+#
+# Swept by baseline_density_strength_sweep_celegan.yaml:
+#   p1          = perplexity   [15, 30, 50, 80, 120, 200]  (structural axis)
+#   dens_lambda = density-preservation strength             (density axis)
+# Fixed here:
+#   p2          = early_exaggeration index 2 -> 12
+#   dens_frac   = 0.3  (fraction of iterations using the density term)
+# densNE backend default dens_lambda = 0.1.
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_celegan.DMTBaseDataModule
+  init_args:
+    data_path: /usr/storage/ruizhe/zangzelin/data
+    pca_dim: 64
+    batch_size: 54649
+    num_workers: 0
+    K: 50
+    n_hop: 1
+    include_time_label: true
+    exclude_unannotated: true
+    standardize: true
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: _densne
+    data_name: celegan
+    num_input_dim: 2766
+    n_components: 2
+    p1: 4
+    p2: 2
+    p3: 0
+    dens_lambda: 4.0
+    dens_frac: 0.3
+    random_state: null
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  devices: 1
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  enable_checkpointing: false
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: cs_5seed_densne_denslambda_celegan
+      project: DiffTree_rz
+      save_dir: wandb
+  callbacks:
+  - class_path: callbacks.xc_plot_callback.VisualizationCallback
+    init_args:
+      output_dir: outputs/case_study_hpsweep/celegan/densne_denslambda
+      every_n_epochs: 1
+  - class_path: callbacks.xc_plot_heterogeneity.HeterogeneityPlotCallback
+    init_args:
+      output_dir: outputs/case_study_hpsweep/celegan/densne_denslambda/heterogeneity
+      every_n_epochs: 1
+      target_label: 1
+  - class_path: callbacks.Eval_density.FidelityEvalCallback
+    init_args:
+      every_n_epochs: 1
+      down_sample: 3000
+      knn_k: 12
+      density_k: 15
+  - class_path: callbacks.paper_embedding_plot_callback.VisualizationCallback
+    init_args:
+      output_dir: outputs/paper_embeddings/case_study_5seed/densne_denslambda/celegan
+      dataset_name: CELEGAN
+      method_name: densNE (lambda)
+      every_n_epochs: 1
+      max_plot_samples: 100000
+      save_formats:
+        - png
+        - pdf
+      scale_down_factor: 3.0
+      dpi: 800
+      base_point_size: 1.2
+      min_point_size: 0.5
+      alpha: 0.6
+      edge_color: none

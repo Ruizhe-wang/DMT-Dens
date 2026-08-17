@@ -1,0 +1,21 @@
+# Seven-run advisor-requested numerical diagnostic on c89.
+program: main.py
+method: grid
+project: TopoBranch_global_standardization_diagnostic
+name: global_standardization_density_guard_seed42_c89
+parameters:
+  config:
+    values:
+    - configs/encoder_bench/ablation_global_standardization_diagnostic/runs/globalstd_latent-bn_epi_full_seed42.yaml
+    - configs/encoder_bench/ablation_global_standardization_diagnostic/runs/globalstd_latent-bn_epi_base_seed42.yaml
+    - configs/encoder_bench/ablation_global_standardization_diagnostic/runs/globalstd_latent-bn_epi_b2_bidirectional_seed42.yaml
+    - configs/encoder_bench/ablation_global_standardization_diagnostic/runs/globalstd_latent-bn_epi_b5_multi_density_seed42.yaml
+    - configs/encoder_bench/ablation_global_standardization_diagnostic/runs/globalstd_latent-bn_hcl_full_seed42.yaml
+    - configs/encoder_bench/ablation_global_standardization_diagnostic/runs/globalstd_latent-bn_hcl_b4_single_density_seed42.yaml
+    - configs/encoder_bench/ablation_global_standardization_diagnostic/runs/globalstd_latent-bn_mnist_full_seed42.yaml
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- fit
+- ${args}

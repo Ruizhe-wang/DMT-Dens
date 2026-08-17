@@ -1,0 +1,88 @@
+# Hyperparameter search for baseline DR methods on a paper tuning panel.
+# Run:
+#   wandb sweep configs/baseline_hyperparameter_sweep/baseline_hyperparameter_sweep.yaml
+#   wandb agent <entity>/DiffTree_rz/<sweep_id>
+#
+# p1/p2 are method-specific grid indices defined in model.baseline_tri.DMTEVT_model:
+#   t-SNE/densNE:
+#     p1=perplexity [15, 30, 50, 80, 120, 200]
+#     p2=early_exaggeration [4, 8, 12, 18, 24, 32]
+#   UMAP/densMAP:
+#     p1=n_neighbors [10, 15, 20, 40, 80, 120]
+#     p2=min_dist [0.001, 0.01, 0.05, 0.08, 0.15, 0.3]
+#   PaCMAP:
+#     p1=n_neighbors [10, 15, 20, 40, 80, 120]
+#     p2=(MN_ratio, FP_ratio) [(0.3, 1.0), (0.5, 1.0), (0.5, 2.0), (1.0, 2.0), (2.0, 5.0), (3.0, 8.0)]
+#   PHATE:
+#     p1=knn [5, 10, 15, 20, 40, 80]
+#     p2=decay [10, 20, 40, 80, 120, 160]
+
+program: main.py
+method: grid
+project: DiffTree_rz
+name: baseline_hyperparameter_sweep_paper_panel
+
+parameters:
+  config:
+    values:
+      - configs/baseline_hyperparameter_sweep/baseline_tsne_mnist.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_umap_mnist.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_pacmap_mnist.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_densmap_mnist.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_densne_mnist.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_phate_mnist.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_tsne_aqc.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_umap_aqc.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_pacmap_aqc.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_densmap_aqc.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_densne_aqc.yaml
+      - configs/baseline_hyperparameter_sweep/baseline_phate_aqc.yaml
+      - configs/dmtme_dataset_baselines/tsne/emnist.yaml
+      - configs/dmtme_dataset_baselines/umap/emnist.yaml
+      - configs/dmtme_dataset_baselines/pacmap/emnist.yaml
+      - configs/dmtme_dataset_baselines/densmap/emnist.yaml
+      - configs/dmtme_dataset_baselines/densne/emnist.yaml
+      - configs/dmtme_dataset_baselines/phate/emnist.yaml
+      - configs/dmtme_dataset_baselines/tsne/gast10k.yaml
+      - configs/dmtme_dataset_baselines/umap/gast10k.yaml
+      - configs/dmtme_dataset_baselines/pacmap/gast10k.yaml
+      - configs/dmtme_dataset_baselines/densmap/gast10k.yaml
+      - configs/dmtme_dataset_baselines/densne/gast10k.yaml
+      - configs/dmtme_dataset_baselines/phate/gast10k.yaml
+      - configs/dmtme_dataset_baselines/tsne/hcl.yaml
+      - configs/dmtme_dataset_baselines/umap/hcl.yaml
+      - configs/dmtme_dataset_baselines/pacmap/hcl.yaml
+      - configs/dmtme_dataset_baselines/densmap/hcl.yaml
+      - configs/dmtme_dataset_baselines/densne/hcl.yaml
+      - configs/dmtme_dataset_baselines/phate/hcl.yaml
+      - configs/dmtme_dataset_baselines/tsne/mca.yaml
+      - configs/dmtme_dataset_baselines/umap/mca.yaml
+      - configs/dmtme_dataset_baselines/pacmap/mca.yaml
+      - configs/dmtme_dataset_baselines/densmap/mca.yaml
+      - configs/dmtme_dataset_baselines/densne/mca.yaml
+      - configs/dmtme_dataset_baselines/phate/mca.yaml
+      - configs/dmtme_dataset_baselines/tsne/ng20.yaml
+      - configs/dmtme_dataset_baselines/umap/ng20.yaml
+      - configs/dmtme_dataset_baselines/pacmap/ng20.yaml
+      - configs/dmtme_dataset_baselines/densmap/ng20.yaml
+      - configs/dmtme_dataset_baselines/densne/ng20.yaml
+      - configs/dmtme_dataset_baselines/phate/ng20.yaml
+
+  seed_everything:
+    value: 42
+
+  model.init_args.random_state:
+    value: 42
+
+  model.init_args.p1:
+    values: [0, 1, 2, 3, 4, 5]
+
+  model.init_args.p2:
+    values: [0, 1, 2, 3, 4, 5]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

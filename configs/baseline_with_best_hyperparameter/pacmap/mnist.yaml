@@ -1,0 +1,52 @@
+# Best observed baseline configuration from W&B hp_sweep (2026-06-30 export).
+# Selection metric: W&B `val_score` column (higher is better).
+# Source run: baseline_pacmap_hparam_mnist; best observed val_score=0.537342.
+# Grid indices p1=3, p2=4 decode to: n_neighbors=40, mn_ratio=2.0, fp_ratio=5.0
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_mnist_v2.DMTBaseDataModule
+  init_args:
+    data_path: data
+    pca_dim: 64
+    batch_size: 60000
+    num_workers: 0
+    K: 100
+    n_hop: 1
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: _pacmap
+    data_name: mnist
+    num_input_dim: 784
+    n_components: 2
+    p1: 3
+    p2: 4
+    p3: 0
+    random_state: 42
+    n_neighbors: 40
+    mn_ratio: 2.0
+    fp_ratio: 5.0
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  devices: 1
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  enable_checkpointing: false
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: baseline_best_pacmap_mnist
+      project: DiffTree_rz
+      save_dir: wandb
+  callbacks:
+  - class_path: callbacks.xc_plot_callback.VisualizationCallback
+    init_args:
+      output_dir: outputs/plots/baseline_with_best_hyperparameter/pacmap/mnist
+      every_n_epochs: 1
+  - class_path: callbacks.Eval_density.FidelityEvalCallback
+    init_args:
+      every_n_epochs: 1
+      down_sample: 3000
+      knn_k: 12
+      density_k: 15

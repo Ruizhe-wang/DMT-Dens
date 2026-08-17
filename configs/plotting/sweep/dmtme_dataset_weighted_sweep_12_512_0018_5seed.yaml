@@ -1,0 +1,41 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: dmtme_dataset_weighted_12_512_0018_5seed
+
+parameters:
+  config:
+    values:
+      - 'configs/plotting/ACT.yaml'
+      - 'configs/plotting/EMNIST.yaml'
+      - 'configs/plotting/HCL.yaml'
+      - 'configs/plotting/MCA.yaml'
+      - 'configs/plotting/NG20.yaml'
+      - 'configs/plotting/aqc.yaml'
+      - 'configs/plotting/epi.yaml'
+      - 'configs/plotting/gast10k.yaml'
+      - 'configs/plotting/mnist.yaml'
+      - 'configs/plotting/tree.yaml'
+
+
+  model.init_args.density_k:
+    values: [12]
+
+  model.init_args.density_num_anchors:
+    values: [512]
+
+  model.init_args.density_weight:
+    values: [0.0018]
+
+  model.init_args.max_epochs:
+    values: [1000]
+
+  trainer.max_epochs:
+    values: [1000]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

@@ -1,0 +1,29 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: HCL_density_preservation_sweep_new_loss
+parameters:
+  config:
+    values:
+      - 'configs/dmtme_dataset_weighted/HCL.yaml'
+  
+  # 新实现使用 Pearson 相关系数损失，值域 [0,1]，梯度稳定无爆炸风险。
+  # 旧 MSE 实现需压到 0.001 以防梯度混乱；新实现可安全探索更大范围。
+  model.init_args.density_weight:
+    values: [0.001, 0.003, 0.005, 0.008, 0.012, 0.02, 0.03, 0.05]
+    
+  # density_k 现在同时控制两个尺度：k_small=k//2 和 k（多尺度内置）。
+  # 较小的 k 产生更细粒度的尺度对 [k//2, k]，较大的 k 捕捉更宏观结构。
+  model.init_args.density_k:
+    values: [8, 10, 12, 14, 16, 20, 24, 30]
+
+  # 密度锚点的数量。增加中间的锚点密度，平滑精度和噪声之间的过渡。
+  model.init_args.density_num_anchors:
+    values: [128, 256, 384, 512]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

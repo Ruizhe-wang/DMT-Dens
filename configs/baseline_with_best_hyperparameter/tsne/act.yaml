@@ -1,0 +1,53 @@
+# Best observed baseline configuration from W&B hp_sweep (2026-06-30 export).
+# Selection metric: W&B `val_score` column (higher is better).
+# Source run: baseline_tsne_act; best observed val_score=0.719107.
+# Grid indices p1=3, p2=2 decode to: perplexity=80, early_exaggeration=12
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_activity.DMTBaseDataModule
+  init_args:
+    pca_dim: 64
+    batch_size: 10299
+    num_workers: 0
+    K: 200
+    n_f_per_cluster: 3
+    n_hop: 1
+    l_token: 10
+    data_path: /usr/storage/ruizhe/zangzelin/data
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: _tsne
+    data_name: act
+    num_input_dim: 561
+    n_components: 2
+    p1: 3
+    p2: 2
+    p3: 0
+    random_state: 42
+    perplexity: 80
+    early_exaggeration: 12
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  devices: 1
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  enable_checkpointing: false
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: baseline_best_tsne_act
+      project: DiffTree_rz
+      save_dir: wandb
+  callbacks:
+  - class_path: callbacks.xc_plot_callback.VisualizationCallback
+    init_args:
+      output_dir: outputs/plots/baseline_with_best_hyperparameter/tsne/act
+      every_n_epochs: 1
+  - class_path: callbacks.Eval_density.FidelityEvalCallback
+    init_args:
+      every_n_epochs: 1
+      down_sample: 3000
+      knn_k: 12
+      density_k: 15

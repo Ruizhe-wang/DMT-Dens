@@ -1,0 +1,17 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: sweep_density_weight
+parameters:
+  config:
+    values:
+      - 'configs/density_weight_sweep/temp/difftree_density_mnist.yaml'
+  model.density_weight:
+    values: [1e-2, 1e-3, 1e-4,1e-5]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

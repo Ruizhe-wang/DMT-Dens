@@ -1,0 +1,46 @@
+# Stage B: ACT (561-d) across the four encoders, seeds 42/43/44.
+#
+# Three seeds from the start rather than a single-seed screen followed by a
+# top-up: ACT runs are cheap and the NG20 result being checked in parallel is a
+# negative one, where a single seed is the weakest possible evidence.
+#
+# lr is not swept: each config carries the value selected on NG20
+# (mlp 3e-4, resmlp 1e-3, ft_transformer 5e-3, latent_transformer 5e-3), which is
+# what the protocol asks for -- search once on NG20, then fix.
+#
+# Batch is 5000 for every encoder except ft_transformer, which is 2048.
+# Feature tokenization needs 562 tokens and scripts/smoke_encoder.py measured
+# OOM at both 5000 and 2500 on an 11 GB card, 7.8 GB at 2048. Protocol rule 4
+# allows the reduction and requires it to be recorded, so the FT-Transformer row
+# of the ACT table is not batch-matched with the others and the summary must say
+# so. Reading a difference in its favour as an encoder effect would be wrong;
+# reading a difference against it as an encoder effect is also unsafe, since a
+# smaller batch changes the hard-pair ratio and the density anchor count.
+#
+# Run only on code at or after 3f03455, and keep all twelve runs on one machine:
+# d_c89_vm carries torch 2.4 while d_c82_vm and d_c90_vm carry 2.5.1, and a
+# comparison split across them would differ in more than the encoder.
+program: main.py
+method: grid
+project: TopoBranch_encoder_bench_ACT
+name: encoder_bench_act_3seed_fixed_baseline
+
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/act_mlp.yaml
+      - configs/encoder_bench/act_resmlp.yaml
+      - configs/encoder_bench/act_ft_transformer.yaml
+      - configs/encoder_bench/act_latent_transformer.yaml
+  seed_everything:
+    values:
+      - 42
+      - 43
+      - 44
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

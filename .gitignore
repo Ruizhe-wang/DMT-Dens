@@ -1,0 +1,56 @@
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+.coverage
+htmlcov/
+
+# Environments and local configuration
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.claude/
+.codex_tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Data and generated neighbors
+data/
+m1data/
+data_path/
+examples/data/
+*.h5ad
+*.h5
+*.npy
+*.npz
+*.pkl
+save_near_index/
+
+# Training products and local experiment state
+outputs/
+results/
+experiment_results/
+tmp/
+wandb/
+lightning_logs/
+checkpoints/
+zzl_checkpoints/
+*.ckpt
+*.log
+
+# Build products
+build/
+dist/
+*.egg-info/
+
+# Local analysis workspaces
+analyze-data-workspace/

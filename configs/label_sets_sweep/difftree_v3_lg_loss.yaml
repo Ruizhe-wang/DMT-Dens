@@ -1,0 +1,62 @@
+program: main.py
+method: grid
+project: CONSISTENCY_EVAL
+name: label_sets_sweep_difftree_v3
+
+parameters:
+  config:
+    values:
+      # Size 2 (6 groups)
+      - 'configs/label_sets_sweep/base/s2_1_7.yaml'
+      - 'configs/label_sets_sweep/base/s2_0_6.yaml'
+      - 'configs/label_sets_sweep/base/s2_4_9.yaml'
+      - 'configs/label_sets_sweep/base/s2_3_8.yaml'
+      - 'configs/label_sets_sweep/base/s2_5_6.yaml'
+      - 'configs/label_sets_sweep/base/s2_2_7.yaml'
+      # Size 3 (6 groups)
+      - 'configs/label_sets_sweep/base/s3_1_4_7.yaml'
+      - 'configs/label_sets_sweep/base/s3_3_5_8.yaml'
+      - 'configs/label_sets_sweep/base/s3_0_6_9.yaml'
+      - 'configs/label_sets_sweep/base/s3_2_3_8.yaml'
+      - 'configs/label_sets_sweep/base/s3_4_7_9.yaml'
+      - 'configs/label_sets_sweep/base/s3_1_5_6.yaml'
+      # Size 4 (4 groups)
+      - 'configs/label_sets_sweep/base/s4_0_1_4_7.yaml'
+      - 'configs/label_sets_sweep/base/s4_2_3_5_8.yaml'
+      - 'configs/label_sets_sweep/base/s4_3_4_8_9.yaml'
+      - 'configs/label_sets_sweep/base/s4_0_2_6_9.yaml'
+      # Size 5 (3 groups)
+      - 'configs/label_sets_sweep/base/s5_01357.yaml'
+      - 'configs/label_sets_sweep/base/s5_24689.yaml'
+      - 'configs/label_sets_sweep/base/s5_13489.yaml'
+      # Size 6 (1 group)
+      - 'configs/label_sets_sweep/base/s6_023589.yaml'
+      # Size 7 (2 groups)
+      - 'configs/label_sets_sweep/base/s7_0134579.yaml'
+      - 'configs/label_sets_sweep/base/s7_0235689.yaml'
+      # Size 8 (1 group)
+      - 'configs/label_sets_sweep/base/s8_01234689.yaml'
+      # Size 10 (1 group)
+      - 'configs/label_sets_sweep/base/s10_all.yaml'
+  data.batch_size:
+    value: 6500
+
+  model.num_use_mlevel_list:
+    value: [0.8, 1, 1.5]
+  model.lg_warmup_epochs:
+    value: 20
+  model.lg_weight:
+    value: 0.1
+  model.lg_position_weight:
+    value: 0.2
+  model.nu_lat:
+    value: 0.002
+  model.exp_b:
+    value: 0.2
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

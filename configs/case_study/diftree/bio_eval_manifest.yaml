@@ -1,0 +1,41 @@
+# Case-study bio-evaluation manifest.
+# This file documents the post-training evaluation commands for the three
+# DiffTree/TopoBranch biological case studies. The actual runnable dataset
+# configs are the bio_eval_*.yaml files in this directory.
+
+evaluations:
+  - name: case_study_pancreatic_endocrinogenesis
+    train_config: configs/case_study/diftree/pancreatic_endocrinogenesis.yaml
+    bio_eval_config: configs/case_study/diftree/bio_eval_pancreatic_endocrinogenesis.yaml
+    expected_embedding: outputs/embeddings/pancreas_topobranch_embeddings.csv
+    output_dir: outputs/bio_eval/case_study_pancreatic_endocrinogenesis
+    supported_panels:
+      - celltype
+      - pseudotime
+      - transition
+      - rare
+      - marker
+
+  - name: case_study_human_bone_marrow_palantir
+    train_config: configs/case_study/diftree/human_bone_marrow_palantir.yaml
+    bio_eval_config: configs/case_study/diftree/bio_eval_human_bone_marrow_palantir.yaml
+    expected_embedding: outputs/embeddings/human_bone_marrow_palantir_topobranch_embeddings.csv
+    output_dir: outputs/bio_eval/case_study_human_bone_marrow_palantir
+    supported_panels:
+      - celltype
+      - pseudotime
+      - diffusion_potential
+      - transition
+      - rare
+      - branch_probability
+      - marker
+
+  - name: case_study_mouse_hspc_nestorowa2016
+    train_config: configs/case_study/diftree/mouse_hspc_nestorowa2016.yaml
+    bio_eval_config: configs/case_study/diftree/bio_eval_mouse_hspc_nestorowa2016.yaml
+    expected_embedding: outputs/embeddings/mouse_hspc_nestorowa2016_topobranch_embeddings.csv
+    output_dir: outputs/bio_eval/case_study_mouse_hspc_nestorowa2016
+    supported_panels:
+      - celltype
+      - rare
+      - marker

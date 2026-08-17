@@ -1,0 +1,48 @@
+# Capacity control on NG20: the two transformers widened, seed 42.
+#
+# At the protocol widths both transformers sit far below the fairness band
+# (ft_transformer 0.03x the baseline parameter count, latent_transformer 0.10x),
+# so their poor showing cannot be separated from under-parameterisation. These
+# runs widen the token dimension and change nothing else, then rerun the same
+# three learning-rate candidates so the comparison does not smuggle in a rate
+# that only suited the narrow model.
+#
+#   ft_transformer_wide      d_token 32 -> 96    33 K -> 247 K   0.03x -> 0.22x
+#   latent_transformer_wide  d_token 64 -> 224  114 K -> 1.24 M  0.10x -> 1.10x
+#
+# The latent model reaches the middle of the 0.5-2x band. Feature tokenization
+# cannot: d_token 128 needs about 11 GB at the aligned batch of 4096, so 96 is
+# the widest that fits without reducing the batch, and reducing it would have to
+# apply to every encoder to stay like-for-like. 0.22x is still out of band and
+# the results table has to say so - but it is 7.4x the parameters of the
+# protocol width, so if the failure mode is unchanged, capacity is not what
+# explains it.
+#
+# What to look for: the narrow ft_transformer collapsed outright in 2 of 6 runs
+# (val_embedding_collapsed = 1, axis_ratio -> 0, NaN loss) and was
+# near-degenerate in the rest. If the wide version still collapses, the problem
+# is the tokenization rather than the size.
+#
+# Seed 42 first; seeds 43 and 44 follow for whichever width is carried forward.
+# Run only on code at or after 3f03455.
+program: main.py
+method: grid
+project: TopoBranch_encoder_bench_NG20
+name: encoder_bench_ng20_wide_lr_seed42_v2
+
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/sweep_wide/runs/ng20_ft_transformer_wide_lr0p005.yaml
+      - configs/encoder_bench/sweep_wide/runs/ng20_ft_transformer_wide_lr0p001.yaml
+      - configs/encoder_bench/sweep_wide/runs/ng20_ft_transformer_wide_lr0p0003.yaml
+      - configs/encoder_bench/sweep_wide/runs/ng20_latent_transformer_wide_lr0p005.yaml
+      - configs/encoder_bench/sweep_wide/runs/ng20_latent_transformer_wide_lr0p001.yaml
+      - configs/encoder_bench/sweep_wide/runs/ng20_latent_transformer_wide_lr0p0003.yaml
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

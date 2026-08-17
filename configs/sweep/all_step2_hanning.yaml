@@ -1,0 +1,33 @@
+program: main.py
+method: grid
+project: C_HDTREE
+name: sweep_step1_then_step2_ckpt_complete
+
+parameters:
+  config:
+    values: [
+      # Step 1 配置
+      # "conf/step1/G_xc_1gpu_celegan.yaml",
+      # "conf/step1/G_xc_1gpu_Cortex_Var_G.yaml",
+      # "conf/step1/G_xc_1gpu_huadalai.yaml",
+      # "conf/step1/G_xc_1gpu_jkyliu.yaml",
+      # "conf/step1/G_xc_1gpu_marrow_Var_G.yaml",
+      # "conf/step1/G_xc_1gpu_mnist.yaml",
+      # "conf/step1/G_xc_1gpu_weinreb.yaml",
+      
+      # Step 2 Checkpoint 配置
+      "conf/step2_ckpt/G_xc_1gpu_celegan.yaml",
+      "conf/step2_ckpt/G_xc_1gpu_Cortex_Var_G.yaml",
+      "conf/step2_ckpt/G_xc_1gpu_huadalai.yaml",
+      "conf/step2_ckpt/G_xc_1gpu_jkyliu.yaml",
+      "conf/step2_ckpt/G_xc_1gpu_marrow_Var_G.yaml",
+      "conf/step2_ckpt/G_xc_1gpu_mnist.yaml",
+      "conf/step2_ckpt/G_xc_1gpu_weinreb.yaml",
+    ]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - validate
+  - ${args}

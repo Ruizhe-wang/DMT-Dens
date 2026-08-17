@@ -1,0 +1,86 @@
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_pancreas.DMTBaseDataModule
+  init_args:
+    data_path: /usr/storage/ruizhe/zangzelin/data/pancreas
+    h5ad_file: endocrinogenesis_day15.5_preprocessed.h5ad
+    pca_dim: 64
+    batch_size: 5000
+    num_workers: 0
+    K: 200
+    n_hop: 1
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args:
+    method: _umap
+    data_name: pancreatic_endocrine
+    num_input_dim: 2000
+    n_components: 2
+    p1: 1
+    p2: 2
+    p3: 0
+    random_state: 42
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  devices: 1
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  enable_checkpointing: false
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: baseline_umap_pancreatic_endocrine
+      project: DiffTree_rz
+      save_dir: wandb
+  callbacks:
+  - class_path: callbacks.xc_plot_callback.VisualizationCallback
+    init_args:
+      output_dir: outputs/plots/baseline_umap_pancreatic_endocrine
+      every_n_epochs: 1
+  - class_path: callbacks.pancreas_paper_plot_callback.PancreasPaperPlotCallback
+    init_args:
+      output_dir: outputs/paper_figures/pancreas/umap
+      every_n_epochs: 1
+      method_name: UMAP
+      layer: 0
+      save_formats: [png, pdf, svg]
+      save_table: true
+      log_to_wandb: true
+  - class_path: callbacks.xc_save_consolidated_embeddings.SaveConsolidatedEmbeddingsCallback
+    init_args:
+      dataset_name: pancreas
+      output_dir: outputs/embeddings
+      save_format: both
+      embedding_method_name: umap
+  - class_path: callbacks.pancreas_density_preservation_callback.PancreasDensityPreservationCallback
+    init_args:
+      adata_path: /usr/storage/ruizhe/zangzelin/data/pancreas/endocrinogenesis_day15.5_preprocessed.h5ad
+      embedding_paths:
+        - outputs/embeddings/pancreas_topobranch_embeddings.csv
+        - outputs/embeddings/pancreas_densmap_embeddings.csv
+        - outputs/embeddings/pancreas_densne_embeddings.csv
+        - outputs/embeddings/pancreas_pacmap_embeddings.csv
+        - outputs/embeddings/pancreas_phate_embeddings.csv
+        - outputs/embeddings/pancreas_tsne_embeddings.csv
+        - outputs/embeddings/pancreas_umap_embeddings.csv
+      method_names: [TopoBranch, densMAP, densNE, PaCMAP, PHATE, t-SNE, UMAP]
+      output_dir: outputs/paper_figures/pancreas_density_preservation
+      pseudotime_key: dpt_pseudotime
+      panel_keys: [pseudotime, state_group, transition_density, markers]
+      marker_genes: [Neurog3, Fev, Ins1, Ins2, Gcg, Sst, Ghrl, Pdx1]
+      save_formats: [png, pdf, svg]
+      density_k: 15
+      abundance_k: 15
+      skip_missing_embeddings: true
+  - class_path: callbacks.xc_plot_heterogeneity.HeterogeneityPlotCallback
+    init_args:
+      output_dir: outputs/plots/baseline_umap_pancreatic_endocrine/heterogeneity
+      every_n_epochs: 1
+      target_label: 1
+  - class_path: callbacks.Eval_density.FidelityEvalCallback
+    init_args:
+      every_n_epochs: 1
+      down_sample: 3000
+      knn_k: 12
+      density_k: 15

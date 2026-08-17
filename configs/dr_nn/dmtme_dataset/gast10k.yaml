@@ -1,0 +1,68 @@
+seed_everything: 42
+
+data:
+  class_path: data_model.dataset_bio.Gast10kDataModule
+  init_args:
+    pca_dim: 64
+    batch_size: 3000
+    num_workers: 8
+    K: 50
+    n_f_per_cluster: 3
+    n_hop: 1
+    l_token: 10
+    data_path: /usr/storage/ruizhe/zangzelin/data
+
+model:
+  class_path: model.DiffTreeVQ_v2.DMTEVT_model
+  init_args:
+    num_input_dim: 1458
+    lr: 0.005
+    nu_lat: 0.01
+    nu_emb: -1
+    exaggeration_lat: 2
+    exaggeration_emb: -1
+    sample_rate_feature: 1.00
+    T_hidden_size: 512
+    t_output_dim: 40
+    weight_decay: 0.0000000001
+    num_use_moe: 1
+    T_num_layers: 3
+    max_epochs: 1000
+    tree_depth: 10
+    step2_epoch: 1000
+    step2_r_epoch: 1000
+    use_tree_rout: True
+    gen_data_bool: False
+    ec_ce_weight: 2
+    weightrout: 0.1
+    loss_type: 'G'
+    all_g_l_weight: 0.95
+    exp_b: 0.4
+    exp_min: 1e-6
+    num_use_mlevel_list: [0.5, 1, 5, 10]
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: difftree_gast10k
+      project: C_HDTREE
+      save_dir: wandb
+  callbacks:
+    - class_path: callbacks.xc_save_model.SaveLatestSubmodulesCallback
+      init_args:
+        output_dir: 'zzl_checkpoints/gast10k'
+    - class_path: callbacks.xc_plot_callback.VisualizationCallback
+      init_args:
+        output_dir: 'zzl_checkpoints/gast10k'
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        dirpath: 'zzl_checkpoints/gast10k'
+        monitor: 'loss_all'
+        filename: 'difftree-{epoch:02d}-{loss_all:.2f}'
+        save_last: true
+  max_epochs: 500
+  devices: 1
+  accelerator: gpu
+  check_val_every_n_epoch: 100
+  enable_checkpointing: True

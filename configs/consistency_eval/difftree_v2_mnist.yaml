@@ -1,0 +1,94 @@
+# =============================================================================
+# DiffTreeVQ_v2 Configuration for Local-Global Consistency Evaluation
+# Dataset: MNIST
+# Usage: python main.py fit -c conf/consistency_eval/difftree_v2_mnist.yaml
+# =============================================================================
+
+seed_everything: 42
+
+data:
+  class_path: data_model.M1datamodel_mnist_v2.DMTBaseDataModule
+  init_args:
+    pca_dim: 64
+    batch_size: 5000
+    num_workers: 8
+    K: 200
+    n_hop: 1
+    data_path: /root/autodl-fs/  # Modify this path on remote machine
+
+model:
+  class_path: model.DiffTreeVQ_v2.DMTEVT_model
+  init_args:
+    num_input_dim: 784
+    lr: 0.005
+    nu_lat: 0.01
+    nu_emb: -1
+    exaggeration_lat: 2
+    exaggeration_emb: -1
+    sample_rate_feature: 1.00
+    T_hidden_size: 512
+    t_output_dim: 40
+    weight_decay: 0.0000000001
+    num_use_moe: 1
+    T_num_layers: 3
+    max_epochs: 500
+    tree_depth: 10
+    step2_epoch: 1000
+    step2_r_epoch: 1000
+    use_tree_rout: true
+    gen_data_bool: false
+    ec_ce_weight: 2
+    weightrout: 0.1
+    loss_type: 'G'
+    all_g_l_weight: 0.95
+    exp_b: 0.4
+    exp_min: 1e-6
+    num_use_mlevel_list: [0.5, 1, 5, 10]
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+      name: difftree_v2_mnist_consistency
+      project: CONSISTENCY_EVAL
+      save_dir: wandb
+  callbacks:
+    # DMTEVTConsistencyCallback for detailed analysis
+    - class_path: callbacks.consistency_callback.DMTEVTConsistencyCallback
+      init_args:
+        output_dir: 'consistency_output/difftree_v2_mnist'
+        eval_every_n_epochs: 50  # Evaluate every 50 epochs
+        label_key: 'cell_type'
+        use_wandb: true
+        max_samples: 5000
+        schemes:
+          - 'side_by_side'
+          - 'distortion'
+          - 'multiscale'
+    # Quick metrics callback for frequent monitoring
+    - class_path: callbacks.consistency_callback.QuickConsistencyCallback
+      init_args:
+        eval_every_n_epochs: 10
+        max_samples: 2000
+        label_key: 'cell_type'
+        use_model_embedding: true
+    # Save model checkpoints
+    - class_path: callbacks.xc_save_model.SaveLatestSubmodulesCallback
+      init_args:
+        output_dir: 'zzl_checkpoints/difftree_v2_mnist_consistency'
+    # Visualization callback
+    - class_path: callbacks.xc_plot_callback.VisualizationCallback
+      init_args:
+        output_dir: 'zzl_checkpoints/difftree_v2_mnist_consistency'
+    # Model checkpoint
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        dirpath: 'zzl_checkpoints/difftree_v2_mnist_consistency'
+        monitor: 'loss_all'
+        filename: 'difftree-{epoch:02d}-{loss_all:.2f}'
+        save_last: true
+  max_epochs: 500
+  devices: 1
+  accelerator: gpu
+  check_val_every_n_epoch: 10
+  enable_checkpointing: true

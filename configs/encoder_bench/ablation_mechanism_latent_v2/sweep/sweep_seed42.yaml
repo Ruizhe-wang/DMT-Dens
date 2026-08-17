@@ -1,0 +1,50 @@
+# Stabilized full rerun: 3 datasets x 12 variants x seed 42.
+program: main.py
+method: grid
+project: TopoBranch_latent_mechanism_ablation_v2
+name: latent_bn_old_mechanism_stable_v2_mnist_hcl_epi_seed42
+parameters:
+  config:
+    values:
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_full_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_r1_distance_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_r2_unidirectional_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_r3_allpair_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_r4_single_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_r5_no_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_base_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_b1_rank_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_b2_bidirectional_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_b3_hardpair_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_b4_single_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_hcl_b5_multi_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_full_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_r1_distance_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_r2_unidirectional_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_r3_allpair_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_r4_single_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_r5_no_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_base_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_b1_rank_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_b2_bidirectional_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_b3_hardpair_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_b4_single_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_epi_b5_multi_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_full_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_r1_distance_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_r2_unidirectional_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_r3_allpair_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_r4_single_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_r5_no_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_base_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_b1_rank_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_b2_bidirectional_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_b3_hardpair_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_b4_single_density_seed42.yaml
+    - configs/encoder_bench/ablation_mechanism_latent_v2/runs/ablation_v2_latent-bn_mnist_b5_multi_density_seed42.yaml
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- fit
+- ${args}

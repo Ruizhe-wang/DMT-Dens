@@ -1,0 +1,28 @@
+# E17: the three untested Transformer combinations, 3 seeds each.
+# A ACT latent-bn (a gap, not a tested failure); B NG20 FT + the E10-E12
+# recipe (never combined; FT's last run predates the normalization finding);
+# C NG20 latent with M*rank < D (the current config is a 5x expansion there).
+# Sweep agents override a run config's project, so ACT runs will land in
+# whichever project this sweep declares - read results by run name.
+program: main.py
+method: grid
+project: TopoBranch_encoder_bench_NG20
+name: encoder_bench_e17_transformer_gaps
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}
+parameters:
+  config:
+    values:
+      - configs/encoder_bench/sweep_e17/runs/act_latent_bn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e17/runs/act_latent_bn_lr0p001_seed43.yaml
+      - configs/encoder_bench/sweep_e17/runs/act_latent_bn_lr0p001_seed44.yaml
+      - configs/encoder_bench/sweep_e17/runs/ng20_ft_bn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e17/runs/ng20_ft_bn_lr0p001_seed43.yaml
+      - configs/encoder_bench/sweep_e17/runs/ng20_ft_bn_lr0p001_seed44.yaml
+      - configs/encoder_bench/sweep_e17/runs/ng20_latent_m16_r4_bn_lr0p001_seed42.yaml
+      - configs/encoder_bench/sweep_e17/runs/ng20_latent_m16_r4_bn_lr0p001_seed43.yaml
+      - configs/encoder_bench/sweep_e17/runs/ng20_latent_m16_r4_bn_lr0p001_seed44.yaml

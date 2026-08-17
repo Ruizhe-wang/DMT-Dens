@@ -1,0 +1,40 @@
+# UMAP label scaling: size=9, labels=[1, 2, 3, 4, 5, 6, 7, 8, 9]
+# Rationale: Drop 0 — remove the most distinctive digit (unique circular shape) to test consistency without the easiest anchor
+# Run: python main.py fit -c conf/label_scaling/umap_s9_123456789.yaml
+
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_mnist_v2.DMTBaseDataModule
+  init_args: {pca_dim: 64, batch_size: 60000, num_workers: 0, K: 200, n_hop: 1, data_path: data}
+model:
+  class_path: model.baseline_tri.DMTEVT_model
+  init_args: {method: _umap, data_name: mnist, num_input_dim: 784, n_components: 2,
+    p1: 1, p2: 3, p3: 0, random_state: 42}
+trainer:
+  max_epochs: 1
+  devices: 1
+  accelerator: cpu
+  check_val_every_n_epoch: 1
+  enable_checkpointing: false
+  num_sanity_val_steps: 0
+  limit_train_batches: 1
+  limit_val_batches: 1
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args: {name: umap_s9_123456789, project: CONSISTENCY_EVAL, save_dir: wandb}
+  callbacks:
+  - class_path: callbacks.baseline_plot_callback.BaselinePlotCallback
+    init_args:
+      label_key: cell_type
+      output_dir: results_label_scaling/umap/s9_123456789
+      downsample: 20000
+      label_sets:
+      - &id001 [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  - class_path: callbacks.consistency_callback.ConsistencyCallback
+    init_args:
+      label_key: cell_type
+      local_method: umap
+      label_sets:
+      - *id001
+  - class_path: callbacks.xc_plot_callback.VisualizationCallback
+    init_args: {output_dir: results_label_scaling/umap/s9_123456789}

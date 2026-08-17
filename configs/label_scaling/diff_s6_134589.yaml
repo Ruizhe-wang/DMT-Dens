@@ -1,0 +1,57 @@
+# DiffTree label scaling: size=6, labels=[1, 3, 4, 5, 8, 9]
+# Rationale: Confusable: all three confusion clusters packed together
+# Run: python main.py fit -c conf/label_scaling/diff_s6_134589.yaml
+
+seed_everything: 42
+data:
+  class_path: data_model.M1datamodel_mnist_v2.DMTBaseDataModule
+  init_args: {pca_dim: 64, batch_size: 2000, num_workers: 0, K: 200, n_hop: 1, data_path: data}
+model:
+  class_path: model.DiffTreeVQ_v2.DMTEVT_model
+  init_args:
+    num_input_dim: 784
+    T_hidden_size: 512
+    T_num_layers: 3
+    t_output_dim: 40
+    tree_depth: 10
+    num_use_moe: 1
+    lr: 0.005
+    weight_decay: 1.0e-10
+    nu_lat: 0.002
+    nu_emb: -1
+    exaggeration_lat: 2
+    exaggeration_emb: -1
+    loss_type: G
+    all_g_l_weight: 0.95
+    ec_ce_weight: 2
+    exp_b: 0.2
+    exp_min: 1.0e-06
+    max_epochs: 500
+    step2_epoch: 1000
+    step2_r_epoch: 1000
+    sample_rate_feature: 1.0
+    use_tree_rout: true
+    gen_data_bool: false
+    weightrout: 0.1
+    num_use_mlevel_list: [0.3, 0.5, 0.8, 1, 2, 3.5]
+trainer:
+  max_epochs: 500
+  accelerator: gpu
+  devices: 1
+  enable_checkpointing: true
+  check_val_every_n_epoch: 50
+  num_sanity_val_steps: 0
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args: {name: difftree_s6_134589, project: CONSISTENCY_EVAL, save_dir: wandb}
+  callbacks:
+  - class_path: callbacks.consistency_callback.ConsistencyCallback
+    init_args:
+      label_key: cell_type
+      save_micro_ckpt: /usr/storage/ruizhe/mldr/results/label_scaling/difftree/s6_134589
+      layers: [0, 1, 2, 3, 4, 5]
+      micro_training_epochs: 500
+      label_sets:
+      - [1, 3, 4, 5, 8, 9]
+  - class_path: callbacks.xc_plot_callback.VisualizationCallback
+    init_args: {output_dir: results_label_scaling/difftree/s6_134589}

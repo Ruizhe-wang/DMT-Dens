@@ -1,0 +1,49 @@
+# Hyperparameter search for recovering a clearer tree-shaped 2D embedding.
+# Run:
+#   wandb sweep configs/difftree_density_tree_sweep.yaml
+#   wandb agent <entity>/DiffTree_rz/<sweep_id>
+#
+# Selection rule:
+#   1. Prefer final-annotation plots with connected trunk/branches and no
+#      radial fan or central hole.
+#   2. Use val_structure_score_head_* as the main quantitative filter.
+#   3. Use density metrics only as secondary checks; strong density preservation
+#      alone can still flatten a tree into a fan.
+
+program: main.py
+method: grid
+project: DiffTree_rz
+name: difftree_density_tree_sweep
+
+parameters:
+  config:
+    value: configs/difftree_density_tree.yaml
+
+  # First-pass structure search: keep augmentation and density weight fixed so
+  # the grid stays small and isolates the tree-shape controls.
+  data.init_args.K:
+    value: 60
+
+  # Smaller nu gives heavier tails in Q and usually helps branch separation;
+  # mid values are retained because too-small nu can over-fragment endpoints.
+  model.init_args.nu_lat:
+    values: [0.005, 0.01, 0.02]
+
+  # exp_b controls rank-similarity decay P=b^rank. Lower values emphasize very
+  # local continuity along branches; higher values test whether trunk continuity
+  # needs a broader attraction field.
+  model.init_args.exp_b:
+    values: [0.25, 0.35, 0.45]
+
+  # Keep the density scale local. The implementation automatically uses
+  # [density_k//2, density_k], so k=8 means density is matched at 4 and 8.
+  model.init_args.density_k:
+    values: [6, 8, 10]
+
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

@@ -1,0 +1,22 @@
+program: main.py
+method: grid
+project: C_HDTREE
+name: sweepMnist
+parameters:
+  config:
+    values: [
+      "conf/step1_tf/G_xc_1gpu_celegan.yaml",
+      "conf/step1_tf/G_xc_1gpu_Cortex_Var_G.yaml",
+      "conf/step1_tf/G_xc_1gpu_huadalai.yaml",
+      "conf/step1_tf/G_xc_1gpu_jkyliu.yaml",
+      "conf/step1_tf/G_xc_1gpu_marrow_Var_G.yaml",
+      "conf/step1_tf/G_xc_1gpu_mnist_t.yaml",
+      "conf/step1_tf/G_xc_1gpu_weinreb.yaml",
+    ]
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}
+

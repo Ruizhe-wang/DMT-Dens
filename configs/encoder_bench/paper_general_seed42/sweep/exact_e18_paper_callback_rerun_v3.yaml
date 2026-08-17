@@ -1,0 +1,23 @@
+# Nine general datasets using the exact accepted E18 paper callback; latent-bn, seed 42; longest-first.
+program: main.py
+method: grid
+project: TopoBranch_encoder_paper_figures
+name: latent_bn_general_exact_e18_paper_callback_rerun_seed42_v3
+parameters:
+  config:
+    values:
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_emnist_seed42.yaml
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_epi_seed42.yaml
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_hcl_seed42.yaml
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_tree_seed42.yaml
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_mca_seed42.yaml
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_mnist_seed42.yaml
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_ng20_seed42.yaml
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_gast10k_seed42.yaml
+    - configs/encoder_bench/paper_general_seed42/runs/paper_exact_latent-bn_act_seed42.yaml
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- fit
+- ${args}

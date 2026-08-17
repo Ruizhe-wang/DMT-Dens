@@ -1,0 +1,28 @@
+program: main.py
+method: grid
+project: DiffTree_rz
+name: q_diag_bce_all_datasets_5seed
+
+parameters:
+  config:
+    values:
+      - configs/Q_diag_BCE/temp/artificial_tree.yaml
+      - configs/Q_diag_BCE/temp/mnist.yaml
+      - configs/Q_diag_BCE/temp/emnist.yaml
+      - configs/Q_diag_BCE/temp/ng20.yaml
+      - configs/Q_diag_BCE/temp/act.yaml
+      - configs/Q_diag_BCE/temp/hcl.yaml
+      - configs/Q_diag_BCE/temp/mca.yaml
+      - configs/Q_diag_BCE/temp/gast10k.yaml
+      - configs/Q_diag_BCE/temp/epi.yaml
+      - configs/Q_diag_BCE/temp/celegan.yaml
+      - configs/Q_diag_BCE/temp/dyngen.yaml
+  seed_everything:
+    values: [42, 43, 44, 45, 46]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}

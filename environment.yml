@@ -1,0 +1,9 @@
+name: dmt-dens
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10
+  - pip>=25
+  - pip:
+      - -r requirements.txt

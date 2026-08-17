@@ -1,0 +1,36 @@
+# Paired 22-run collapse learning-rate diagnostic on c89.
+program: main.py
+method: grid
+project: TopoBranch_latent_ablation_lr_diagnostic
+name: latent_ablation_collapse_lr1e3_vs_lr3e4_seed42_c89
+parameters:
+  config:
+    values:
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_hcl_full_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_hcl_full_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_hcl_b4_single_density_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_hcl_b4_single_density_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_full_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_full_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_base_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_base_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_b2_bidirectional_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_b2_bidirectional_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_b4_single_density_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_b4_single_density_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_b5_multi_density_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_b5_multi_density_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_r1_distance_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_r1_distance_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_r2_unidirectional_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_epi_r2_unidirectional_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_mnist_full_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_mnist_full_lr3e4_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_mnist_b5_multi_density_lr1e3_seed42.yaml
+    - configs/encoder_bench/ablation_lr_diagnostic/runs/ablation_lrdiag_latent-bn_mnist_b5_multi_density_lr3e4_seed42.yaml
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- fit
+- ${args}

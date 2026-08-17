@@ -1,0 +1,66 @@
+# [3/3] DiffTree runtime / scalability sweep -- 5 seeds across datasets & sizes,
+# recording hardware / GPU / CPU / peak-memory / runtime / log-paths.
+#
+# Datasets x sizes: emnist, gast, hcl, mca, mnist at 2k..60k (same base configs
+# as configs/runtime/difftree_runtime_sweep.yaml). 27 configs x 5 seeds = 135
+# runs (GPU). Seeds vary seed_everything; data sampling stays fixed by each base
+# config's data.init_args.seed: 42.
+#
+# Recording:
+#   * RuntimeProfilerCallback (already in each base config) -> per-epoch timing
+#     and peak CUDA memory to results/runtime/runtime_runs.csv + wandb summary.
+#   * RuntimeInfoCallback (appended below via --trainer.callbacks+=) -> hardware
+#     (CPU/GPU model, RAM), CPU peak RSS, software versions, and log paths to
+#     outputs/runtime_info/*.json + wandb summary (runtime/* fields).
+# The append needs no edits to the 27 base configs (LightningCLI list-append).
+#
+# Project note: base configs log to project DiffTree_runtime; this sweep matches
+# that. Change `project:` here and the base configs' logger.project together if
+# you want these under DiffTree_rz instead.
+
+program: main.py
+method: grid
+project: DiffTree_runtime
+name: runtime_difftree_5seed_sweep
+
+parameters:
+  config:
+    values:
+      - 'configs/runtime/difftree/difftree_emnist_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n20000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n40000.yaml'
+      - 'configs/runtime/difftree/difftree_emnist_n60000.yaml'
+      - 'configs/runtime/difftree/difftree_gast_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_gast_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_gast_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_gast_n10638.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n20000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n40000.yaml'
+      - 'configs/runtime/difftree/difftree_hcl_n60000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n20000.yaml'
+      - 'configs/runtime/difftree/difftree_mca_n23341.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n2000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n5000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n10000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n20000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n40000.yaml'
+      - 'configs/runtime/difftree/difftree_mnist_n60000.yaml'
+
+  seed_everything:
+    values: [42, 43, 44, 45, 46]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - fit
+  - ${args}
+  - --trainer.callbacks+=callbacks.runtime_info_callback.RuntimeInfoCallback

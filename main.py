@@ -39,15 +39,6 @@ def main():
         subclass_mode_data=True,
     )
 
-    # W&B is optional when trainer.logger=false. Close a run cleanly when the
-    # package is installed and a W&B logger was selected.
-    try:
-        import wandb
-
-        wandb.finish()
-    except ImportError:
-        pass
-
 
 if __name__ == "__main__":
     main()

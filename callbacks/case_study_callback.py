@@ -7,9 +7,6 @@ import numpy as np
 import pandas as pd
 import scanpy as sc
 import torch
-import wandb
-
-from callbacks.wandb_utils import safe_wandb_step
 
 
 TIME_COLOR_SCALE = [
@@ -78,13 +75,6 @@ class VisualizationCallback(pl.Callback):
         self.time_vmax = time_vmax
         self.show_colorbar = show_colorbar
         self.save_legend = save_legend
-
-    def _get_wandb_run(self, trainer):
-        logger = getattr(trainer, "logger", None)
-        if logger is None:
-            return None
-        experiment = getattr(logger, "experiment", None)
-        return experiment if experiment is not None else None
 
     def _is_baseline_model(self, pl_module):
         return hasattr(pl_module, "method") and hasattr(pl_module, "validation_step_outputs_vis")
@@ -240,16 +230,7 @@ class VisualizationCallback(pl.Callback):
             dpi=self.dpi,
         )
 
-    def _wandb_image_from_fig(self, fig):
-        import io
-        from PIL import Image as PILImage
-
-        buf = io.BytesIO()
-        self._save_fig(fig, buf, "png")
-        buf.seek(0)
-        return wandb.Image(PILImage.open(buf).convert("RGBA"))
-
-    def plot_dmt(self, adata, data_input, lat_vis, text="", info="batch", log_to_wandb=True):
+    def plot_dmt(self, adata, data_input, lat_vis, text="", info="batch"):
         down_sample = self.max_plot_samples
         if data_input.shape[0] > down_sample:
             indices_t = torch.randperm(data_input.shape[0])[:down_sample]
@@ -266,13 +247,10 @@ class VisualizationCallback(pl.Callback):
         adata.obsm["X_dmtevt"] = lat_vis.detach().cpu().numpy()
 
         os.makedirs(self.output_dir, exist_ok=True)
-        fig_dict = {}
         fig = self.plot_case_study_panel(adata, info=info)
         for fmt in self.save_formats:
             path = os.path.join(self.output_dir, f"case_study_{info}_batch{text}.{fmt}")
             self._save_fig(fig, path, fmt)
-        if log_to_wandb:
-            fig_dict[f"{self.panel_prefix}/{info}/batch_{text}"] = self._wandb_image_from_fig(fig)
         plt.close(fig)
 
         legend_fig = self.plot_case_study_legend(adata.obs[info], info)
@@ -280,11 +258,7 @@ class VisualizationCallback(pl.Callback):
             for fmt in self.save_formats:
                 path = os.path.join(self.output_dir, f"case_study_{info}_legend{text}.{fmt}")
                 self._save_fig(legend_fig, path, fmt)
-            if log_to_wandb:
-                fig_dict[f"{self.panel_prefix}/{info}_legend/batch_{text}"] = self._wandb_image_from_fig(legend_fig)
             plt.close(legend_fig)
-
-        return fig_dict
 
     def on_validation_epoch_end(self, trainer, pl_module):
         if not trainer.is_global_zero:
@@ -305,8 +279,6 @@ class VisualizationCallback(pl.Callback):
         ):
             return
 
-        run = self._get_wandb_run(trainer)
-        up_dict = {}
         adata = trainer.datamodule.adata
 
         sc.set_figure_params(dpi=100, facecolor="white", frameon=False)
@@ -314,15 +286,10 @@ class VisualizationCallback(pl.Callback):
         info_list = trainer.datamodule.info_list
         for i in range(lat_vis.shape[0]):
             for info in info_list:
-                fig_dict = self.plot_dmt(
+                self.plot_dmt(
                     adata,
                     data_input,
                     lat_vis[i],
                     text=f"_layer{i}",
                     info=info,
-                    log_to_wandb=run is not None,
                 )
-                up_dict.update(fig_dict)
-
-        if run is not None and up_dict:
-            run.log(up_dict, step=safe_wandb_step(trainer, run))

@@ -7,7 +7,7 @@ seed_everything: 45
 data:
   class_path: data_model.M1datamodel_epi.DMTBaseDataModule
   init_args:
-    data_path: /zangzelin/data
+    data_path: data
     pca_dim: 64
     batch_size: 4096
     num_workers: 8
@@ -83,11 +83,10 @@ trainer:
   num_sanity_val_steps: 0
   log_every_n_steps: 500
   logger:
-    class_path: lightning.pytorch.loggers.WandbLogger
+    class_path: lightning.pytorch.loggers.CSVLogger
     init_args:
+      save_dir: outputs/logs
       name: resmlp-bn_epi_seed45
-      project: TopoBranch_encoder_suite
-      save_dir: wandb/encoder_bench
   callbacks:
   - class_path: lightning.pytorch.callbacks.ModelCheckpoint
     init_args:

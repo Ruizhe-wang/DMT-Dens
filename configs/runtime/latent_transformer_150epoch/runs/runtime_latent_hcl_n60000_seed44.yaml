@@ -4,7 +4,7 @@ seed_everything: 44
 data:
   class_path: data_model.M1datamodel_runtime_hcl.DMTBaseDataModule
   init_args:
-    data_path: /zangzelin/data
+    data_path: data
     pca_dim: 64
     seed: 42
     sample_data_size: 60000
@@ -90,20 +90,10 @@ trainer:
   num_sanity_val_steps: 0
   log_every_n_steps: 500
   logger:
-    class_path: lightning.pytorch.loggers.WandbLogger
+    class_path: lightning.pytorch.loggers.CSVLogger
     init_args:
+      save_dir: outputs/logs
       name: runtime_latent_hcl_n60000_seed44
-      project: TopoBranch_latent_runtime_150epoch
-      group: runtime_hcl
-      tags:
-      - runtime
-      - latent-transformer
-      - 150-epoch
-      - hcl
-      - n60000
-      - seed44
-      save_dir: wandb/runtime_latent_150epoch
-      log_model: false
   callbacks:
   - class_path: callbacks.runtime_profiler.RuntimeProfilerCallback
     init_args:

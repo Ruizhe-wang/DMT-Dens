@@ -1,5 +1,0 @@
-export WANDB_API_KEY=local-04561b3685afca039aca56f554efe6a008118c01
-export WANDB_BASE_URL=http://www.zangzelin.fun:4080
-
-# python main.py fit -c conf/mnistsmall.yaml
-CUDA_VISIBLE_DEVICES=1 python main.py validate -c conf/mnistsmall_ckpt.yaml

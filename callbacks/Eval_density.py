@@ -4,12 +4,10 @@ import os
 import torch
 import torch.nn.functional as F
 import lightning as pl
-import wandb
 import numpy as np
 
 from eval.fidelity_eval import summarize_embedding_metrics, compute_asr, compute_frdc
 from callbacks.encoder_benchmark import embedding_health_metrics
-from callbacks.wandb_utils import safe_wandb_step
 
 ALIAS_METRIC_NAMES = {"knn", "trust", "dist_corr", "den_corr", "ldc", "spir"}
 
@@ -55,9 +53,8 @@ def build_metric_log_payload(metrics, include_primary_aliases=True):
             payload["val_svc"] = float(svc_value)
 
         # Combined objective: equal-weighted mean of visible density correlation
-        # and SVC accuracy. Logged so a single-metric wandb sweep can optimize
-        # density preservation and label separability jointly (used by the
-        # celegan wide bayes sweep). Additive: does not affect other metrics.
+        # and SVC accuracy. This local selection metric does not affect the
+        # underlying measurements.
         den_corr_value = metrics.get("density_correlation")
         if den_corr_value is not None and svc_value is not None:
             payload["val_density_svc_combined"] = (
@@ -87,7 +84,6 @@ class FidelityEvalCallback(pl.Callback):
     - Continuity
     """
     def __init__(self, every_n_epochs=1, down_sample=3000, knn_k=12, density_k=15, seed=42,
-                 use_mellon=False, mellon_pca_dim=20,
                  bn_train_eval_diagnostic=False, diagnostic_output_path=None):
         super().__init__()
         self.every_n_epochs = every_n_epochs
@@ -95,8 +91,6 @@ class FidelityEvalCallback(pl.Callback):
         self.knn_k = knn_k
         self.density_k = density_k
         self.seed = seed
-        self.use_mellon = use_mellon
-        self.mellon_pca_dim = mellon_pca_dim
         self.bn_train_eval_diagnostic = bool(bn_train_eval_diagnostic)
         self.diagnostic_output_path = diagnostic_output_path
         # Retain one verified full-HD array so ASR/FR-DC's id-based reference
@@ -118,13 +112,6 @@ class FidelityEvalCallback(pl.Callback):
             self._independent_hd_reference = hd_full
             return hd_full
         return reference
-
-    def _get_wandb_run(self, trainer):
-        logger = getattr(trainer, "logger", None)
-        if logger is None:
-            return None
-        experiment = getattr(logger, "experiment", None)
-        return experiment if experiment is not None else None
 
     def _is_baseline_model(self, pl_module):
         return hasattr(pl_module, "method") and hasattr(pl_module, "validation_step_outputs_vis")
@@ -346,8 +333,6 @@ class FidelityEvalCallback(pl.Callback):
         ):
             return
 
-        run = self._get_wandb_run(trainer)
-        
         # Get embeddings and high-dim data
         lat_vis, data_input, labels = self.get_embeddings(trainer, pl_module)
 
@@ -408,8 +393,6 @@ class FidelityEvalCallback(pl.Callback):
                 knn_k=self.knn_k,
                 density_k=self.density_k,
                 seed=self.seed,
-                use_mellon=self.use_mellon,
-                mellon_pca_dim=self.mellon_pca_dim,
             )
 
             score_payload = build_metric_log_payload(
@@ -465,7 +448,3 @@ class FidelityEvalCallback(pl.Callback):
             pl_module.log(log_name, value, sync_dist=True)
 
         self._append_diagnostic_record(epoch_num, up_dict)
-
-        if run is not None and up_dict:
-            # We also let PL module log it, but explicit wandb log keeps step unified
-            run.log(up_dict, step=safe_wandb_step(trainer, run))

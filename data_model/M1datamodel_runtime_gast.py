@@ -18,7 +18,7 @@ from data_model.runtime_sampling import subsample_adata_arrays
 class DMTBaseDataModule(pl.LightningDataModule):
     def __init__(
         self,
-        data_path: str = "/zangzelin/data",
+        data_path: str = "data",
         batch_size: int = 32,
         num_workers: int = 1,
         K: int = 3,

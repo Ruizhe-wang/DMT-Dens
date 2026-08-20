@@ -1,18 +1,9 @@
 # Baseline Configurations With Best Observed Hyperparameters
 
-These YAML files select, for every baseline method on every dataset, the
-hyperparameter combination with the highest **`val_score`** observed in the
-2026-06-30 W&B `hp_sweep` export:
-
-```text
-D:/ruizhe/result/baseline/hp_sweep/wandb_export_2026-06-30T17_13_41.932+08_00.csv   (act, epi, tree)
-D:/ruizhe/result/baseline/hp_sweep/wandb_export_2026-06-30T17_14_58.949+08_00.csv   (emnist, gast10k, hcl, mca, ng20, mnist)
-```
-
-Selection metric: the W&B `val_score` column directly (higher is better). For
-each `(method, dataset)` the run maximizing `val_score` over the `p1 x p2` grid
-is chosen, and its grid indices are decoded into the real hyperparameters via the
-grids in `model/baseline_tri.py`.
+These YAML files contain the selected baseline hyperparameters used by the
+manuscript. For each `(method, dataset)` pair, the retained configuration is
+the candidate with the highest validation score over the `p1 x p2` grid. Grid
+indices are decoded into the real hyperparameters by `model/baseline_tri.py`.
 
 ## Grids (model/baseline_tri.py)
 
@@ -27,23 +18,20 @@ The sweep used indices `p1, p2 ∈ {0..4}` (a 5×5 = 25-point grid per cell).
 
 ## Scope
 
-- **53 method-dataset configurations** written: 6 baselines × 9 datasets
-  (`act, epi, tree, emnist, gast10k, hcl, mca, ng20, mnist`), minus `densne/emnist`.
+- **70 retained configurations** cover the six primary baseline methods plus
+  the density-weight refinements used in the manuscript.
+- The datasets are `act, epi, tree, emnist, gast10k, hcl, mca, ng20, mnist`.
 - **Missing `densne/emnist`**: den-SNE has no EMNIST run in the sweep (it exceeds
   the 24 h budget — the OOT cell in the paper's Table 1).
 - **No AQC**: the sweep contains no AQC runs.
 - Every cell except `densne/emnist` has the full 25-point grid; that single gap is
   intentional.
 
-## Data-block provenance and caveat
+## Data-path caveat
 
-- For `emnist, gast10k, hcl, mca, ng20, mnist` the data block is reused from the
-  prior configs in this directory (path convention `data_path: /zangzelin/data`,
-  and `data: data` for mnist).
-- For `act, epi, tree` the data block is taken verbatim from the swept base configs
-  in `configs/dmtme_dataset_baselines/`. **These use a different mount**
-  (`/usr/storage/ruizhe/...`). Adjust `data_path` to your environment before
-  running if it differs from the other files here.
+The resolved files retain the data roots used for the reported experiments.
+Override `--data.init_args.data_path` at launch to point to the public dataset
+layout documented in `docs/DATA.md`.
 
 ## densNE note
 
@@ -54,6 +42,7 @@ tuned for densNE.
 ## Run
 
 ```bash
-wandb sweep configs/baseline_with_best_hyperparameter/baseline_with_best_hyperparameter_sweep.yaml
-wandb agent <entity>/DiffTree_rz/<sweep_id>
+python main.py fit \
+  --config configs/baseline_with_best_hyperparameter/umap/hcl.yaml \
+  --data.init_args.data_path /data/dmt-dens
 ```

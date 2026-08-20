@@ -213,8 +213,8 @@ class EncoderBenchmarkCallback(pl.Callback):
         logger = getattr(trainer, "logger", None)
         experiment = getattr(logger, "experiment", None)
         summary = getattr(experiment, "summary", None)
-        # Lightning's dummy experiment, and some offline/disabled wandb runs,
-        # answer every attribute with a no-op callable rather than a mapping.
+        # Lightning's dummy experiment can answer attributes with no-op
+        # callables rather than a mapping.
         # Only something that actually supports item assignment is usable.
         if summary is None or not hasattr(summary, "__setitem__"):
             return None

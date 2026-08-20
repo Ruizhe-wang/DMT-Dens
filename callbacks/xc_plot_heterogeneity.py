@@ -5,12 +5,6 @@ import lightning as pl
 import plotly.graph_objects as go
 from typing import Optional, Any
 from sklearn.neighbors import NearestNeighbors
-from callbacks.wandb_utils import safe_wandb_step
-
-try:
-    import wandb
-except Exception:  # pragma: no cover
-    wandb = None
 
 
 class HeterogeneityPlotCallback(pl.Callback):
@@ -44,12 +38,6 @@ class HeterogeneityPlotCallback(pl.Callback):
         self.max_samples = max_samples
         self.seed = seed
         self._temp_data = {"high_dim": [], "low_dim": []}
-
-    def _get_wandb_run(self, trainer):
-        logger = getattr(trainer, "logger", None)
-        if logger is None:
-            return None
-        return getattr(logger, "experiment", None)
 
     def _is_baseline_model(self, pl_module):
         return hasattr(pl_module, "method") and hasattr(pl_module, "validation_step_outputs_vis")
@@ -273,13 +261,3 @@ class HeterogeneityPlotCallback(pl.Callback):
         fig_ld_dens.write_html(os.path.join(self.output_dir, f"epoch_{epoch_num:04d}_ld_density.html"))
         fig_spir.write_html(os.path.join(self.output_dir, f"epoch_{epoch_num:04d}_spir.html"))
         fig_distortion.write_html(os.path.join(self.output_dir, f"epoch_{epoch_num:04d}_distortion.html"))
-
-        # Log to Wandb
-        run = self._get_wandb_run(trainer)
-        if run is not None and wandb is not None:
-            run.log({
-                "fidelity_vis/hd_density_ground_truth": wandb.Plotly(fig_hd_dens),
-                "fidelity_vis/ld_density_embedded": wandb.Plotly(fig_ld_dens),
-                "fidelity_vis/scattered_point_intrusion": wandb.Plotly(fig_spir),
-                "fidelity_vis/distortion_ratio": wandb.Plotly(fig_distortion),
-            }, step=safe_wandb_step(trainer, run))

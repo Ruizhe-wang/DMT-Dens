@@ -26,12 +26,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 from callbacks.xc_plot_callback import VisualizationCallback  # noqa: E402
-from callbacks.wandb_utils import safe_wandb_step  # noqa: E402
-
-try:  # W&B is optional for local/offline rendering.
-    import wandb
-except ImportError:  # pragma: no cover - exercised only without W&B installed
-    wandb = None
 
 
 class PaperEmbeddingCallback(VisualizationCallback):
@@ -50,8 +44,6 @@ class PaperEmbeddingCallback(VisualizationCallback):
         figsize: float = 4.0,
         dpi: int = 300,
         formats: tuple[str, ...] = ("png", "pdf"),
-        log_to_wandb: bool = False,
-        wandb_key: str = "paper_embedding/figure",
     ):
         super().__init__(
             output_dir=output_dir,
@@ -69,8 +61,6 @@ class PaperEmbeddingCallback(VisualizationCallback):
         self.figsize = figsize
         self.dpi = dpi
         self.formats = tuple(formats)
-        self.log_to_wandb = log_to_wandb
-        self.wandb_key = wandb_key
 
     # ------------------------------------------------------------------ #
     def _load_density(self, n: int) -> np.ndarray | None:
@@ -158,28 +148,6 @@ class PaperEmbeddingCallback(VisualizationCallback):
                 return key, np.asarray(adata.obs[key]).astype(str)
         return None, None
 
-    def _log_saved_images(self, trainer, saved_paths):
-        """Upload the exact files written by the historical paper renderer."""
-        if not self.log_to_wandb or wandb is None:
-            return
-        logger = getattr(trainer, "logger", None)
-        run = getattr(logger, "experiment", None) if logger is not None else None
-        if run is None or not callable(getattr(run, "log", None)):
-            return
-
-        png_paths = [path for path in saved_paths if path.lower().endswith(".png")]
-        if not png_paths:
-            return
-        payload = {}
-        for path in png_paths:
-            key = (
-                f"{self.wandb_key}_density"
-                if "_density_" in os.path.basename(path)
-                else self.wandb_key
-            )
-            payload[key] = wandb.Image(path)
-        run.log(payload, step=safe_wandb_step(trainer, run))
-
     def _render(self, trainer, pl_module, tag: str) -> None:
         if not trainer.is_global_zero:
             return
@@ -204,7 +172,6 @@ class PaperEmbeddingCallback(VisualizationCallback):
                         xy, density, categorical=False,
                         fname=f"{method}_layer{layer}_density_{tag}")
             if any_saved:
-                self._log_saved_images(trainer, any_saved)
                 print(f"[PaperEmbeddingCallback] saved {len(any_saved)} files to "
                       f"{os.path.abspath(self.output_dir)} (e.g. {os.path.basename(any_saved[0])})")
             else:

@@ -164,8 +164,7 @@ class DyngenGroundTruthMetricsCallback(pl.Callback):
                 if v is not None and np.isfinite(v):
                     log[f"{self.prefix}/{k}{suffix}"] = float(v)
 
-        # Log through Lightning so the keys land in the WandbLogger history and
-        # are sortable/optimizable in the sweep table (single logging path to
-        # avoid wandb step conflicts with the image callbacks' manual run.log).
+        # Log through Lightning so the keys are written to the configured local
+        # metrics file through a single logging path.
         for k, v in log.items():
             pl_module.log(k, v, rank_zero_only=True, prog_bar=False, on_epoch=True, on_step=False)

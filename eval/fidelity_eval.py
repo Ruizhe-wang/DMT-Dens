@@ -547,9 +547,6 @@ def summarize_embedding_metrics(
     density_k=15,
     seed=42,
     labels=None,
-    use_mellon=False,
-    mellon_pca_dim=20,
-    mellon_hd_log_density=None,
 ):
     emb_eval = eval_normalize(emb_data)
     hd_eval = np.asarray(hd_data, dtype=np.float32)
@@ -569,20 +566,6 @@ def summarize_embedding_metrics(
         "neighborhood_distortion": compute_expansion_compression(hd_eval, emb_eval, k=knn_k),
         "msdp_auc": compute_msdp_auc(hd_eval, emb_eval),
     }
-
-    if use_mellon:
-        # Independent Mellon ground-truth density correlation (opt-in; needs `mellon`).
-        from eval.mellon_density import compute_mellon_density_correlation
-        summary.update(
-            compute_mellon_density_correlation(
-                hd_eval,
-                emb_eval,
-                density_k=density_k,
-                mellon_pca_dim=mellon_pca_dim,
-                seed=seed,
-                hd_log_density=mellon_hd_log_density,
-            )
-        )
 
     if labels is not None:
         summary["svc_accuracy"] = compute_svc_accuracy(emb_eval, labels, seed=seed)

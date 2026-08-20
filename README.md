@@ -36,6 +36,22 @@ To inspect all CLI overrides:
 python main.py fit --help
 ```
 
+## End-to-end MNIST example
+
+The following command downloads MNIST, creates a deterministic class-balanced
+sample, trains a compact DMT-Dens model, and writes a label-colored 2D PNG:
+
+```bash
+python scripts/run_mnist_example.py
+```
+
+The output is
+`outputs/mnist_example/dmt_dens_mnist_layer0_final_annotation_final.png`.
+MNIST labels are used only to color the final plot; the public data module
+rejects label-informed neighbor construction. For a short installation check,
+use `--samples 1000 --epochs 1`. This example uses a reduced architecture and
+is not a reproduction of the full manuscript benchmark.
+
 ## Use your own matrix
 
 The publication data module accepts either:
@@ -61,7 +77,10 @@ scientific comparison.
 ## Reproduce the manuscript
 
 Resolved configurations for the nine-dataset benchmark, five-seed case
-studies, baselines, and three-seed ablations are already included. Start with:
+studies, baselines, three-seed ablations, and runtime analysis are included.
+All retained paper configurations write metrics to local CSV files and do not
+need an experiment-tracking account; the toy smoke test disables logging.
+Start with:
 
 - `docs/REPRODUCIBILITY.md` — exact configuration families and launch commands;
 - `docs/DATA.md` — accepted public-data layout and expected filenames;
@@ -70,9 +89,9 @@ studies, baselines, and three-seed ablations are already included. Start with:
 - `configs/encoder_bench/ablation_single_factor_loo_3seed_1000/runs/` — final
   single-factor ablations.
 
-Machine-specific paths in historical experiment configurations are not needed:
-override them with `--data.init_args.data_path /your/data/root`. New public
-configs should use relative paths.
+The resolved paper configurations retain the data-root value used for the
+reported runs. Override it with
+`--data.init_args.data_path /your/data/root` on another machine.
 
 ## Repository map
 
@@ -84,11 +103,14 @@ configs should use relative paths.
 | `data_model/public_data.py` | path-neutral `.npz` and `.h5ad` loader |
 | `callbacks/` | embedding export, evaluation, and runtime callbacks |
 | `eval/` | density and manifold-quality metrics |
-| `configs/` | resolved training, baseline, ablation, and case-study configs |
+| `configs/` | paper-result and smoke-test configurations only |
+| `scripts/run_mnist_example.py` | download-to-figure MNIST demonstration |
 | `tests/` | numerical and regression tests |
+| `.github/workflows/ci.yml` | lightweight public-asset and syntax checks |
 
-Older exploratory configurations remain in the repository for auditability. The
-paths listed in `docs/REPRODUCIBILITY.md` are the manuscript source of truth.
+The paths listed in `docs/REPRODUCIBILITY.md` are the manuscript source of
+truth. Historical sweeps and laboratory-specific launch scripts are omitted
+from the public release.
 
 ## Validation
 
@@ -110,6 +132,9 @@ a DOI, cite the software repository and the accompanying DMT-Dens manuscript.
 ## License
 
 DMT-Dens is released under the MIT License. See `LICENSE`.
+
+Contributions are welcome; see `CONTRIBUTING.md` for the validation and data
+handling expectations.
 
 ## Contact
 

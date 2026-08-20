@@ -24,9 +24,6 @@ import numpy as np
 import pandas as pd
 import scanpy as sc
 import torch
-import wandb
-
-from callbacks.wandb_utils import safe_wandb_step
 
 
 def _category_color_map(categories):
@@ -78,13 +75,6 @@ class FateProbabilityVisualizationCallback(pl.Callback):
         self.fate_vmax = fate_vmax
         self.plot_fate_argmax = plot_fate_argmax
         self.fate_commit_threshold = fate_commit_threshold
-
-    def _get_wandb_run(self, trainer):
-        logger = getattr(trainer, "logger", None)
-        if logger is None:
-            return None
-        experiment = getattr(logger, "experiment", None)
-        return experiment if experiment is not None else None
 
     def _is_baseline_model(self, pl_module):
         return hasattr(pl_module, "method") and hasattr(pl_module, "validation_step_outputs_vis")
@@ -147,15 +137,6 @@ class FateProbabilityVisualizationCallback(pl.Callback):
             pad_inches=0.02,
             dpi=self.dpi,
         )
-
-    def _wandb_image_from_fig(self, fig):
-        import io
-        from PIL import Image as PILImage
-
-        buf = io.BytesIO()
-        self._save_fig(fig, buf, "png")
-        buf.seek(0)
-        return wandb.Image(PILImage.open(buf).convert("RGBA"))
 
     def _fate_prob_columns(self, adata):
         cols = [
@@ -270,7 +251,7 @@ class FateProbabilityVisualizationCallback(pl.Callback):
         fig.legend(handles=handles, loc="center", frameon=False, ncol=ncols, fontsize=7)
         return fig
 
-    def plot_dmt_fate(self, adata, data_input, lat_vis, text="", log_to_wandb=True):
+    def plot_dmt_fate(self, adata, data_input, lat_vis, text=""):
         down_sample = self.max_plot_samples
         if data_input.shape[0] > down_sample:
             indices_t = torch.randperm(data_input.shape[0])[:down_sample]
@@ -284,9 +265,8 @@ class FateProbabilityVisualizationCallback(pl.Callback):
         adata.obsm["X_dmtevt"] = lat_vis.detach().cpu().numpy()
 
         fate_cols = self._fate_prob_columns(adata)
-        fig_dict = {}
         if not fate_cols:
-            return fig_dict
+            return
 
         os.makedirs(self.output_dir, exist_ok=True)
 
@@ -296,8 +276,6 @@ class FateProbabilityVisualizationCallback(pl.Callback):
             for fmt in self.save_formats:
                 path = os.path.join(self.output_dir, f"case_study_fateprob_{name}{text}.{fmt}")
                 self._save_fig(fig, path, fmt)
-            if log_to_wandb:
-                fig_dict[f"{self.panel_prefix}/fate_prob/{name}{text}"] = self._wandb_image_from_fig(fig)
             plt.close(fig)
 
         if self.plot_fate_argmax and len(fate_cols) >= 2:
@@ -305,8 +283,6 @@ class FateProbabilityVisualizationCallback(pl.Callback):
             for fmt in self.save_formats:
                 path = os.path.join(self.output_dir, f"case_study_fate_argmax{text}.{fmt}")
                 self._save_fig(fig, path, fmt)
-            if log_to_wandb:
-                fig_dict[f"{self.panel_prefix}/fate_argmax/batch{text}"] = self._wandb_image_from_fig(fig)
             plt.close(fig)
 
             legend_fig = self.plot_fate_argmax_legend(categories, cat_to_color)
@@ -314,11 +290,7 @@ class FateProbabilityVisualizationCallback(pl.Callback):
                 for fmt in self.save_formats:
                     path = os.path.join(self.output_dir, f"case_study_fate_argmax_legend{text}.{fmt}")
                     self._save_fig(legend_fig, path, fmt)
-                if log_to_wandb:
-                    fig_dict[f"{self.panel_prefix}/fate_argmax_legend/batch{text}"] = self._wandb_image_from_fig(legend_fig)
                 plt.close(legend_fig)
-
-        return fig_dict
 
     def on_validation_epoch_end(self, trainer, pl_module):
         if not trainer.is_global_zero:
@@ -343,20 +315,12 @@ class FateProbabilityVisualizationCallback(pl.Callback):
         if not self._fate_prob_columns(adata):
             return
 
-        run = self._get_wandb_run(trainer)
-        up_dict = {}
-
         sc.set_figure_params(dpi=100, facecolor="white", frameon=False)
         lat_vis, data_input = self.get_our_visualization(trainer, pl_module)
         for i in range(lat_vis.shape[0]):
-            fig_dict = self.plot_dmt_fate(
+            self.plot_dmt_fate(
                 adata,
                 data_input,
                 lat_vis[i],
                 text=f"_layer{i}",
-                log_to_wandb=run is not None,
             )
-            up_dict.update(fig_dict)
-
-        if run is not None and up_dict:
-            run.log(up_dict, step=safe_wandb_step(trainer, run))

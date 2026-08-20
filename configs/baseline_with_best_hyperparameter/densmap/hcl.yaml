@@ -6,7 +6,7 @@ seed_everything: 42
 data:
   class_path: data_model.M1datamodel_hcl.DMTBaseDataModule
   init_args:
-    data_path: /zangzelin/data
+    data_path: data
     pca_dim: 64
     batch_size: 60000
     num_workers: 0
@@ -33,11 +33,10 @@ trainer:
   num_sanity_val_steps: 0
   enable_checkpointing: false
   logger:
-    class_path: lightning.pytorch.loggers.WandbLogger
+    class_path: lightning.pytorch.loggers.CSVLogger
     init_args:
+      save_dir: outputs/logs
       name: baseline_best_densmap_hcl
-      project: DiffTree_rz
-      save_dir: wandb
   callbacks:
   - class_path: callbacks.xc_plot_callback.VisualizationCallback
     init_args:

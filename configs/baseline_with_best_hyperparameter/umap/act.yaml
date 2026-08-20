@@ -13,7 +13,7 @@ data:
     n_f_per_cluster: 3
     n_hop: 1
     l_token: 10
-    data_path: /usr/storage/ruizhe/zangzelin/data
+    data_path: data
 model:
   class_path: model.baseline_tri.DMTEVT_model
   init_args:
@@ -35,11 +35,10 @@ trainer:
   num_sanity_val_steps: 0
   enable_checkpointing: false
   logger:
-    class_path: lightning.pytorch.loggers.WandbLogger
+    class_path: lightning.pytorch.loggers.CSVLogger
     init_args:
+      save_dir: outputs/logs
       name: baseline_best_umap_act
-      project: DiffTree_rz
-      save_dir: wandb
   callbacks:
   - class_path: callbacks.xc_plot_callback.VisualizationCallback
     init_args:

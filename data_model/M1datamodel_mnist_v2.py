@@ -39,7 +39,7 @@ def flatten_mnist_data(dataset, ):
 class DMTBaseDataModule(pl.LightningDataModule):
     def __init__(
         self,
-        data_path: str = "/zangzelin/data",
+        data_path: str = "data",
         batch_size: int = 32,
         num_workers: int = 1,
         K: int = 3,
@@ -83,7 +83,7 @@ class DMTBaseDataModule(pl.LightningDataModule):
 
     # def load_data_from_raw(self, sample_data_size=60000):
 
-    #     adata_raw = sc.read_h5ad("/zangzelin/data/qced/cellbin_ed.h5ad")
+    #     adata_raw = sc.read_h5ad("data/qced/cellbin_ed.h5ad")
     #     adata = anndata.AnnData(
     #         X=adata_raw.layers['counts'].copy(),
     #         obs=adata_raw.obs.copy(),var=adata_raw.var.copy())

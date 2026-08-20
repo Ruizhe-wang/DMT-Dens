@@ -24,7 +24,7 @@ x, y); cells are aligned to the h5ad by ``cell_id`` == ``adata.obs_names``.
 Usage
 -----
     python -m tools.dyngen_case_study.compute_metrics \
-        --h5ad  /usr/storage/.../fig3_fate_dyngen_shared_dynGenZL10k_hyperbranch_v2_seed42.h5ad \
+        --h5ad  /path/to/fig3_fate_dyngen_shared_dynGenZL10k_hyperbranch_v2_seed42.h5ad \
         --embedding outputs/embeddings/dyngen_fate_topobranch_embeddings.csv \
         --out outputs/dyngen_metrics/metrics.csv
 

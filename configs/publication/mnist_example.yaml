@@ -1,0 +1,83 @@
+# End-to-end public demo. This reduced run is not a manuscript benchmark result.
+seed_everything: 42
+
+data:
+  class_path: data_model.public_data.PublicDataModule
+  init_args:
+    data_path: examples/data/mnist_5000_seed42.npz
+    data_name: mnist_example
+    x_key: X
+    label_key: y
+    batch_size: 512
+    num_workers: 0
+    K: 20
+    pca_dim: 50
+    n_hop: 1
+    seed: 42
+    num_positive_samples: 1
+    standardize: true
+    uselabel: false
+    use_cache: true
+
+model:
+  class_path: model.DiffTreeVQ_density.DMTEVT_model
+  init_args:
+    num_input_dim: 784
+    num_train_data: 5000
+    lr: 0.001
+    weight_decay: 1.0e-10
+    sample_rate_feature: 1.0
+    exaggeration_lat: 2
+    exaggeration_emb: -1
+    nu_lat: 0.01
+    nu_emb: -1
+    t_output_dim: 40
+    vis_dim: 2
+    max_epochs: 20
+    num_use_mlevel_list: [1]
+    manifold_affinity: rank
+    manifold_symmetric: bidirectional
+    manifold_hardpair: true
+    hardpair_k: 64
+    density_weight: 0.0018
+    density_k: 12
+    density_num_anchors: 128
+    density_scale_mode: multi
+    encoder_type: latent_transformer
+    encoder_kwargs:
+      num_latents: 16
+      d_token: 96
+      num_layers: 2
+      num_heads: 4
+      ffn_ratio: 4.0
+      dropout: 0.0
+      attn_dropout: 0.0
+      latent_rank: 8
+      pooling: mean
+      final_norm: true
+      input_norm: batchnorm
+      force_mem_efficient: false
+
+trainer:
+  max_epochs: 20
+  accelerator: auto
+  devices: 1
+  precision: 32-true
+  deterministic: true
+  logger: false
+  enable_checkpointing: false
+  enable_model_summary: false
+  num_sanity_val_steps: 0
+  limit_val_batches: 0
+  log_every_n_steps: 1
+  callbacks:
+    - class_path: callbacks.xc_paper_embedding_callback.PaperEmbeddingCallback
+      init_args:
+        output_dir: outputs/mnist_example
+        method_name: dmt_dens_mnist
+        color_key: final_annotation
+        point_size: 2.0
+        alpha: 0.8
+        figsize: 5.0
+        dpi: 200
+        formats: [png]

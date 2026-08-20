@@ -5,7 +5,7 @@ set -euo pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash/run_yaml_batch.sh <yaml_path> <gpu_list> <cpus_per_job> [cli_command] [-- extra args]
+  scripts/run_yaml_batch.sh <yaml_path> <gpu_list> <cpus_per_job> [cli_command] [-- extra args]
 
 Arguments:
   yaml_path       Single yaml file or a directory that contains *.yaml
@@ -14,9 +14,8 @@ Arguments:
   cli_command     Lightning CLI subcommand, default: fit
 
 Examples:
-  bash bash/run_yaml_batch.sh conf/consistency_eval 0,1 8
-  bash bash/run_yaml_batch.sh conf/consistency_eval/demo.yaml 2 6 fit
-  bash bash/run_yaml_batch.sh conf/dr_nn 0,1,2 4 fit -- --trainer.max_epochs 100
+  bash scripts/run_yaml_batch.sh configs/encoder_bench/sweep_e18/runs 0,1 8
+  bash scripts/run_yaml_batch.sh configs/publication/toy_cpu.yaml 0 4 fit
 EOF
 }
 

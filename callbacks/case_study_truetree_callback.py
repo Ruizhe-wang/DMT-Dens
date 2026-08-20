@@ -28,9 +28,6 @@ import numpy as np
 import pandas as pd
 import scanpy as sc
 import torch
-import wandb
-
-from callbacks.wandb_utils import safe_wandb_step
 
 
 class TrueTreeOverlayVisualizationCallback(pl.Callback):
@@ -84,12 +81,6 @@ class TrueTreeOverlayVisualizationCallback(pl.Callback):
         self.branch_key = branch_key
 
     # ------------------------------------------------------------------ utils
-    def _get_wandb_run(self, trainer):
-        logger = getattr(trainer, "logger", None)
-        if logger is None:
-            return None
-        return getattr(logger, "experiment", None)
-
     def _is_baseline_model(self, pl_module):
         return hasattr(pl_module, "method") and hasattr(pl_module, "validation_step_outputs_vis")
 
@@ -102,15 +93,6 @@ class TrueTreeOverlayVisualizationCallback(pl.Callback):
 
     def _save_fig(self, fig, path, fmt):
         fig.savefig(path, format=fmt, transparent=True, bbox_inches="tight", pad_inches=0.02, dpi=self.dpi)
-
-    def _wandb_image_from_fig(self, fig):
-        import io
-        from PIL import Image as PILImage
-
-        buf = io.BytesIO()
-        self._save_fig(fig, buf, "png")
-        buf.seek(0)
-        return wandb.Image(PILImage.open(buf).convert("RGBA"))
 
     def get_our_visualization(self, trainer, pl_module):
         import inspect
@@ -246,10 +228,9 @@ class TrueTreeOverlayVisualizationCallback(pl.Callback):
         "internal": dict(marker="o", s_mul=0.5, c="#777777", edge="none"),
     }
 
-    def plot_true_tree(self, adata_bg, emb_bg, positions, counts, edges, text="", log_to_wandb=True):
+    def plot_true_tree(self, adata_bg, emb_bg, positions, counts, edges, text=""):
         """Draw the ground-truth tree (``positions``/``counts`` from full data) over a
         background scatter (``adata_bg``/``emb_bg``, possibly downsampled)."""
-        fig_dict = {}
         roles = self._node_roles(edges)
 
         fig, ax = plt.subplots(figsize=(8, 8))
@@ -282,10 +263,7 @@ class TrueTreeOverlayVisualizationCallback(pl.Callback):
         os.makedirs(self.output_dir, exist_ok=True)
         for fmt in self.save_formats:
             self._save_fig(fig, os.path.join(self.output_dir, f"case_study_truetree{text}.{fmt}"), fmt)
-        if log_to_wandb:
-            fig_dict[f"{self.panel_prefix}/true_tree/overlay{text}"] = self._wandb_image_from_fig(fig)
         plt.close(fig)
-        return fig_dict
 
     # ----------------------------------------------------------------- hooks
     def on_validation_epoch_end(self, trainer, pl_module):
@@ -306,11 +284,9 @@ class TrueTreeOverlayVisualizationCallback(pl.Callback):
         if not edges:
             return
 
-        run = self._get_wandb_run(trainer)
         sc.set_figure_params(dpi=100, facecolor="white", frameon=False)
         lat_vis = self.get_our_visualization(trainer, pl_module)  # [layers, n, dim]
 
-        up_dict = {}
         for i in range(lat_vis.shape[0]):
             emb_full = lat_vis[i].detach().cpu().numpy()
             # node centroids always from full embedding; only background scatter is downsampled
@@ -320,10 +296,11 @@ class TrueTreeOverlayVisualizationCallback(pl.Callback):
                 adata_bg, emb_bg = adata[idx].copy(), emb_full[idx]
             else:
                 adata_bg, emb_bg = adata, emb_full
-            up_dict.update(
-                self.plot_true_tree(adata_bg, emb_bg, positions, counts, edges,
-                                    text=f"_layer{i}", log_to_wandb=run is not None)
+            self.plot_true_tree(
+                adata_bg,
+                emb_bg,
+                positions,
+                counts,
+                edges,
+                text=f"_layer{i}",
             )
-
-        if run is not None and up_dict:
-            run.log(up_dict, step=safe_wandb_step(trainer, run))

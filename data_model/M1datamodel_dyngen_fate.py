@@ -24,7 +24,7 @@ except Exception:
 class DMTBaseDataModule(pl.LightningDataModule):
     def __init__(
         self,
-        data_path: str = "/usr/storage/zelin181data/sclineage/single-cell-lineage1/data/figure3_fate/dyngen",
+        data_path: str = "data",
         h5ad_file: str = "fig3_fate_dyngen_shared_dynGenZL10k_hyperbranch_v2_seed42.h5ad",
         batch_size: int = 32,
         num_workers: int = 1,

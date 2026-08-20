@@ -40,7 +40,6 @@ outputs/
 results/
 experiment_results/
 tmp/
-wandb/
 lightning_logs/
 checkpoints/
 zzl_checkpoints/

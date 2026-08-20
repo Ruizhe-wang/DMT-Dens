@@ -1,8 +1,8 @@
 # Manuscript reproducibility map
 
-Run every command from the repository root. Historical YAML files preserve the
-resolved experiment settings, including the original machine path. Replace only
-the data root at launch:
+Run every command from the repository root. The retained YAML files preserve
+the resolved scientific settings and use the relative `data` root. Override
+only the data root when the processed datasets live elsewhere:
 
 ```bash
 python main.py fit --config CONFIG.yaml \
@@ -46,20 +46,21 @@ python main.py fit \
 
 # ACT corrected batch-size run, seed 42
 python main.py fit \
-  --config configs/encoder_bench/act_bs4096_5seed_1000/runs/act_latent_bn_bs4096_seed42_c90_20260814.yaml \
+  --config configs/encoder_bench/act_bs4096_5seed_1000/runs/act_latent_bn_bs4096_seed42.yaml \
   --data.init_args.data_path /data/dmt-dens
 ```
 
-W&B is used for experiment aggregation in resolved configs. To run without an
-online account, override the logger or set `WANDB_MODE=offline`. Outputs and
-checkpoints are written below `outputs/`, `results/`, and `wandb/`; all are
-ignored by Git.
+Resolved configurations use Lightning's local CSV logger. Metrics are written
+under `outputs/logs/`; plots, checkpoints, and runtime tables are written below
+`outputs/` and `results/`. These generated directories are ignored by Git.
 
 ## Verification levels
 
 1. **Asset test:** validates public metadata, YAML, and generated toy data.
 2. **CPU smoke test:** performs two short optimization batches for two epochs.
-3. **Paper run:** uses a resolved five-seed GPU configuration and public data.
+3. **MNIST example:** downloads public data and exercises preprocessing,
+   neighbor construction, optimization, embedding extraction, and PNG export.
+4. **Paper run:** uses a resolved five-seed GPU configuration and public data.
 
 Record the Git commit, environment export, dataset checksums, GPU model, CUDA
 version, and seed with every paper-scale execution.

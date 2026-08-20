@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import scanpy as sc
 import torch
 import lightning as pl
-import wandb
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 import plotly.express as px
@@ -25,24 +24,6 @@ class VisualizationCallback(pl.Callback):
         self.save_embeddings = save_embeddings
         self.embedding_method_name = embedding_method_name
         self.upload_dict = False
-
-    def _get_wandb_run(self, trainer):
-        logger = getattr(trainer, "logger", None)
-        if logger is None:
-            return None
-
-        experiment = getattr(logger, "experiment", None)
-        return experiment if experiment is not None else None
-
-    def _wandb_log_step(self, trainer, run):
-        trainer_step = int(getattr(trainer, "global_step", 0) or 0)
-        run_step = getattr(run, "step", None)
-        if run_step is None:
-            return trainer_step
-        try:
-            return max(trainer_step, int(run_step))
-        except (TypeError, ValueError):
-            return trainer_step
 
     def get_our_visualization(self, trainer, pl_module, down_sample=10000):
         data_input = []
@@ -169,7 +150,6 @@ class VisualizationCallback(pl.Callback):
         lat_vis,
         text="",
         info="batch",
-        log_to_wandb=True,
     ):
         down_sample = 10000
         if data_input.shape[0] > down_sample:
@@ -192,12 +172,8 @@ class VisualizationCallback(pl.Callback):
 
         adata.obsm["X_dmtevt"] = lat_vis.detach().cpu().numpy()
 
-        fig_dict = {}
         fig = self.plot_single_plot(adata, info=info)
-        if log_to_wandb:
-            fig_dict[f"{info}/batch_{text}"] = wandb.Plotly(fig)
-
-        return fig_dict
+        return fig
 
     def _is_baseline_model(self, pl_module):
         return hasattr(pl_module, "method") and hasattr(pl_module, "validation_step_outputs_vis")
@@ -265,9 +241,6 @@ class VisualizationCallback(pl.Callback):
         ):
             return
 
-        run = self._get_wandb_run(trainer)
-
-        up_dict = {}
         adata = trainer.datamodule.adata
 
         sc.set_figure_params(dpi=100, facecolor="white", frameon=False)
@@ -291,21 +264,10 @@ class VisualizationCallback(pl.Callback):
                     method=self._embedding_method_name(pl_module),
                 )
             for info in info_list:
-                fig_dict = self.plot_dmt(
+                self.plot_dmt(
                     adata,
                     data_input,
                     lat_vis[i],
                     text=f"_layer{i}",
                     info=info,
-                    log_to_wandb=run is not None,
                 )
-                up_dict.update(fig_dict)
-
-        # data_input = data_input.detach().cpu().numpy()
-        # if self.upload_dict == False:
-        #     umap_fig = self.plot_umap(adata, data_input)
-        #     up_dict["umap_projection"] = wandb.Plotly(umap_fig)
-        #     self.upload_dict = True
-
-        if run is not None and up_dict:
-            run.log(up_dict, step=self._wandb_log_step(trainer, run))

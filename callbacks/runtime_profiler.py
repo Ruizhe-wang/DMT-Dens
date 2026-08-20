@@ -132,10 +132,7 @@ class RuntimeProfilerCallback(pl.Callback):
 
     def _run_name(self, trainer):
         logger = getattr(trainer, "logger", None)
-        # NOTE: Lightning's WandbLogger.name returns the *project* name, not the
-        # per-run name, which collapses every run to one bucket. The real run
-        # name (e.g. "runtime_difftree_mnist_n10000", set via logger init_args)
-        # lives on the wandb run object at logger.experiment.name. Prefer it.
+        # Prefer the experiment name when the configured logger exposes one.
         experiment = getattr(logger, "experiment", None)
         run_name = getattr(experiment, "name", None)
         if run_name:
@@ -295,8 +292,8 @@ class RuntimeProfilerCallback(pl.Callback):
         experiment = getattr(logger, "experiment", None)
         summary = getattr(experiment, "summary", None)
         # Not every logger exposes a mapping here: Lightning's dummy experiment
-        # and some offline wandb runs answer any attribute with a no-op
-        # callable, which raises TypeError on item assignment.
+        # may answer attributes with a no-op callable, which raises TypeError on
+        # item assignment.
         if summary is not None and hasattr(summary, "__setitem__"):
             try:
                 for key, value in metrics.items():

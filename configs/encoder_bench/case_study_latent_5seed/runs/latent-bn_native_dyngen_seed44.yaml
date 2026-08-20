@@ -5,7 +5,7 @@ seed_everything: 44
 data:
   class_path: data_model.M1datamodel_dyngen_fate.DMTBaseDataModule
   init_args:
-    data_path: /usr/storage/zelin181data/sclineage/single-cell-lineage1/data/figure3_fate/dyngen
+    data_path: data
     h5ad_file: fig3_fate_dyngen_shared_dynGenZL10k_hyperbranch_v2_seed42.h5ad
     label_key: fig3_true_terminal
     state_key: fig3_true_state
@@ -98,11 +98,10 @@ trainer:
   num_sanity_val_steps: 0
   log_every_n_steps: 10
   logger:
-    class_path: lightning.pytorch.loggers.WandbLogger
+    class_path: lightning.pytorch.loggers.CSVLogger
     init_args:
+      save_dir: outputs/logs
       name: latent-bn_native_dyngen_seed44
-      project: TopoBranch_encoder_case_study
-      save_dir: wandb/encoder_case_study
   callbacks:
   - class_path: lightning.pytorch.callbacks.ModelCheckpoint
     init_args:

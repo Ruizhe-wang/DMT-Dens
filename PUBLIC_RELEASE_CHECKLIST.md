@@ -8,6 +8,16 @@
 - [x] Citation metadata include all manuscript authors.
 - [x] Generated data, checkpoints, caches, and experiment outputs are ignored.
 - [x] The author-selected MIT License is included.
+- [x] Internal sweep orchestration and experiment-tracking integrations are
+      omitted; retained configurations use local CSV logging.
+- [x] Retained paper configurations contain no laboratory-specific absolute
+      data paths.
+- [x] Public configuration filenames and run names omit internal machine and
+      run-date suffixes.
+- [x] Lightweight CI validates public assets on supported Python versions.
+- [x] Contribution guidance covers tests, data, credentials, and licensing.
+- [x] A one-command MNIST example downloads data, trains DMT-Dens, and exports
+      a two-dimensional PNG without using labels for representation learning.
 - [ ] Authors verify all dataset redistribution permissions and publish stable
       accession/download links.
 - [ ] Replace manuscript placeholders with the accepted article DOI when known.

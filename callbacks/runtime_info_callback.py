@@ -6,13 +6,11 @@ appendix:
   * software: python / torch / CUDA versions, OS platform
   * peak memory: GPU peak (allocated + reserved) and CPU peak RSS
   * runtime: wall-clock fit duration
-  * log paths: wandb run dir/id/path, trainer root + log dir, checkpoint dir
+  * log paths: trainer root, local CSV log directory, and checkpoint directory
 
 Outputs:
   1. A JSON file at ``<output_dir>/<run_name>_<timestamp>.json``.
-  2. Flattened ``runtime/*`` fields on the wandb run summary, so they export
-     to your metrics CSV together with the fidelity metrics.
-  3. A concise human-readable block printed to stdout.
+  2. A concise human-readable block printed to stdout.
 
 Usage (add to a config's trainer.callbacks list):
     - class_path: callbacks.runtime_info_callback.RuntimeInfoCallback
@@ -150,7 +148,6 @@ class RuntimeInfoCallback(pl.Callback):
         }
 
         self._write_json(payload)
-        self._log_to_wandb(payload)
         self._print(payload)
 
     # ---- collectors ------------------------------------------------------
@@ -165,11 +162,11 @@ class RuntimeInfoCallback(pl.Callback):
         # Only accept a real string: Lightning's dummy experiment answers every
         # attribute with a bound no-op method, which would otherwise end up in
         # the output filename.
-        wandb_name = _safe(lambda: trainer.logger.experiment.name)
-        if not isinstance(wandb_name, str):
-            wandb_name = None
+        experiment_name = _safe(lambda: trainer.logger.experiment.name)
+        if not isinstance(experiment_name, str):
+            experiment_name = None
         return {
-            "name": wandb_name or name,
+            "name": experiment_name or name,
             "hostname": socket.gethostname(),
             "git_commit": _git_commit(),
         }
@@ -218,9 +215,8 @@ class RuntimeInfoCallback(pl.Callback):
         paths = {
             "default_root_dir": _safe(lambda: str(trainer.default_root_dir)),
             "trainer_log_dir": _safe(lambda: str(trainer.log_dir)),
-            "wandb_run_dir": _safe(lambda: trainer.logger.experiment.dir),
-            "wandb_run_id": _safe(lambda: trainer.logger.experiment.id),
-            "wandb_run_path": _safe(lambda: "/".join(trainer.logger.experiment.path)),
+            "logger_name": _safe(lambda: trainer.logger.name),
+            "logger_version": _safe(lambda: trainer.logger.version),
             "cwd": os.getcwd(),
         }
         ckpt = _safe(lambda: getattr(trainer.checkpoint_callback, "dirpath", None))
@@ -240,18 +236,6 @@ class RuntimeInfoCallback(pl.Callback):
             print(f"[RuntimeInfo] wrote {path}")
         except Exception as e:
             print(f"[RuntimeInfo] failed to write json: {e}")
-
-    def _log_to_wandb(self, payload):
-        try:
-            import wandb
-            if wandb.run is None:
-                return
-            flat = _flatten(payload, prefix="runtime")
-            for k, v in flat.items():
-                if isinstance(v, (int, float, str, bool)) or v is None:
-                    wandb.run.summary[k] = v
-        except Exception as e:
-            print(f"[RuntimeInfo] failed to log wandb summary: {e}")
 
     def _print(self, payload):
         hw = payload["hardware"]
@@ -277,14 +261,4 @@ def _hms(seconds):
     return f"{s // 3600:02d}:{(s % 3600) // 60:02d}:{s % 60:02d}"
 
 
-def _flatten(d, prefix="", sep="/"):
-    out = {}
-    for k, v in d.items():
-        key = f"{prefix}{sep}{k}" if prefix else str(k)
-        if isinstance(v, dict):
-            out.update(_flatten(v, key, sep))
-        elif isinstance(v, list):
-            out[key] = json.dumps(v, default=str)
-        else:
-            out[key] = v
-    return out
+__all__ = ["RuntimeInfoCallback"]

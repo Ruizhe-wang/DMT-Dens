@@ -135,7 +135,3 @@ DMT-Dens is released under the MIT License. See `LICENSE`.
 
 Contributions are welcome; see `CONTRIBUTING.md` for the validation and data
 handling expectations.
-
-## Contact
-
-Zelin Zang — <zangzelin@gmail.com>
